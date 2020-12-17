@@ -100,6 +100,7 @@ nnoremap <leader>d :find %:p:h<CR>
 nnoremap <leader>D :e.<CR>
 nnoremap <leader>h :noh<CR>
 nnoremap <leader>i :r %:p:h<tab>
+nnoremap <leader>pt :tab term<CR>
 nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
