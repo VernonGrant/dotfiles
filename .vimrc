@@ -8,6 +8,10 @@ Plug 'editorconfig/editorconfig-vim'
 call plug#end()
 
 " general
+set enc=utf-8
+set encoding=utf-8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf8,prc
 set backspace=indent,eol,start
 set belloff=all
 set clipboard=unnamed
@@ -20,31 +24,26 @@ set shell=/bin/zsh\ -l
 set tags+=tags;\\~
 set undolevels=1000
 
-" file encoding
-set enc=utf-8
-set encoding=utf8
-set fileencoding=utf-8
-set fileencodings=ucs-bom,utf8,prc
-
 " paths
 set path+=~/notes/**,~/vim-sessions/**
 
 " is work conditions
 set iskeyword+=-
 
-" ignore some stuff.
+" ignore some stuff
 set wildignore+=*.so,*.o,*.zip,*.pdf,*/.git/*,*/node_modules/*,*/vendor/*
 
 " gui
 set guioptions-=L,R,l,r
 autocmd! GUIEnter * set vb t_vb=
 
-" trim trailing spaces.
+" trim trailing spaces
 autocmd BufWritePre * :%s/\s\+$//e
 
 " leader
 let mapleader="\<Space>"
 
+" TODO:
 " theming
 let macvim_skip_colorscheme = 1
 set guifont=Menlo\ Regular:h15
@@ -52,6 +51,8 @@ set background=dark
 colorscheme desert
 highlight Normal guibg=#212121
 highlight Search guifg=#ffffff guibg=#996228
+highlight Todo guifg=#ffffff guibg=#4f7a28
+highlight ColorColumn guibg=#181818
 highlight Comment guifg=#996228
 
 " ==========================================================================="
@@ -73,7 +74,7 @@ augroup END
 " PROJECT SPECIFIC VIMRC "
 " ==========================================================================="
 
-" work on a more simple solution.
+" work on a more simple solution
 if !exists("*LoadProjectVimrc")
   function! LoadProjectVimrc()
     let vimrcFile = findfile(".vimrc", ".;")
@@ -91,28 +92,29 @@ autocmd DirChanged * :call LoadProjectVimrc()
 " HELPERS "
 " ==========================================================================="
 
-" write.
+" write
 nnoremap <C-s> :write<CR>
 
-" workflow.
+" workflow
 nnoremap <leader>f :find<space>
 nnoremap <leader>d :find %:p:h<CR>
 nnoremap <leader>D :e.<CR>
 nnoremap <leader>h :noh<CR>
 nnoremap <leader>i :r %:p:h<tab>
 nnoremap <leader>pt :tab term<CR>
+nnoremap <leader>s :vimgrep //g **/*.js<S-left><S-left><right>
 nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
 tnoremap <Esc> <C-\><C-n>
 
-" quick exit insert mode.
+" quick exit insert mode
 inoremap jj <Esc>
 inoremap hh <Esc>
 inoremap kk <Esc>
 
-" faster arrow navigation, up and down.
+" faster arrow navigation, up and down
 nnoremap <C-k> :-5<CR>
 inoremap <C-k> <Esc>:-5<CR> i
 nnoremap <C-j> :+5<CR>
