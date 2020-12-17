@@ -1,0 +1,60 @@
+# vim & emacs
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+Session.vim
+*~
+\#*\#
+.\#*
+
+# tags
+!TAGS/
+!tags/
+.TAGS
+.tags
+GPATH
+GRTAGS
+GTAGS
+TAGS
+gtags.files
+tags
+
+# osx
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+._*
+Thumbs.db
+ehthumbs.db
+
+# intellij
+.idea/
+
+# logs
+*.log
+
+# general
+$RECYCLE.BIN/
+*.7z
+*.bz2
+*.bzip
+*.cab
+*.deb
+*.dmg
+*.egg
+*.gem
+*.gz
+*.iso
+*.jar
+*.lzma
+*.msi
+*.msm
+*.msp
+*.rar
+*.rpm
+*.tar
+*.xpi
+*.xz
+*.zip

@@ -1,0 +1,15 @@
+# gnore everything
+/*
+
+# git
+!.gitignore
+!.gitignore_global
+
+# bash
+!.bash_profile
+
+# vim
+!.vimrc
+
+# ctags
+!.ctags
