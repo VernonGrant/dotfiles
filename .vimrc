@@ -53,6 +53,8 @@ highlight Search guifg=#ffffff guibg=#996228
 highlight Todo guifg=#ffffff guibg=#4f7a28
 highlight ColorColumn guibg=#181818
 highlight Comment guifg=#996228
+highlight Pmenu guibg=#181818
+highlight PmenuSel guifg=indianred guibg=#181818
 
 " ==========================================================================="
 " UltiSnips
