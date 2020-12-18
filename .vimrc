@@ -5,6 +5,8 @@
 " vim plug
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 call plug#end()
 
 " general
@@ -12,14 +14,11 @@ set enc=utf-8
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-set backspace=indent,eol,start
 set belloff=all
-set clipboard=unnamed
 set colorcolumn=80,120
 set exrc
 set hlsearch
 set noswapfile
-set ruler
 set shell=/bin/zsh\ -l
 set tags+=tags;\\~
 set undolevels=1000
@@ -31,7 +30,8 @@ set path+=~/notes/**,~/vim-sessions/**
 set iskeyword+=-
 
 " ignore some stuff
-set wildignore+=*.so,*.o,*.zip,*.pdf,*/.git/*,*/node_modules/*,*/vendor/*
+set wildignore+=*.so,*.o,*.zip,*.pdf,*.png,*.jpg,*.jpeg
+set wildignore+=*/.git/*,*/node_modules/*,*/vendor/*
 
 " gui
 set guioptions-=L,R,l,r
@@ -43,7 +43,6 @@ autocmd BufWritePre * :%s/\s\+$//e
 " leader
 let mapleader="\<Space>"
 
-" TODO:
 " theming
 let macvim_skip_colorscheme = 1
 set guifont=Menlo\ Regular:h15
@@ -56,7 +55,16 @@ highlight ColorColumn guibg=#181818
 highlight Comment guifg=#996228
 
 " ==========================================================================="
-" LINITING "
+" UltiSnips
+" ==========================================================================="
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+" ==========================================================================="
+" LINTING "
+" TODO: maybe also implement some fixers for automated code formatting?
 " ==========================================================================="
 
 augroup Linting
