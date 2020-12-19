@@ -1,6 +1,6 @@
-" ==========================================================================="
-" GENERAL SETTINGS
-" ==========================================================================="
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              GENERAL SETTINGS                              "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " vim plug
 call plug#begin('~/.vim/plugged')
@@ -56,18 +56,19 @@ highlight Comment guifg=#996228
 highlight Pmenu guibg=#181818
 highlight PmenuSel guifg=indianred guibg=#181818
 
-" ==========================================================================="
-" UltiSnips
-" ==========================================================================="
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                 ULTISNIPS                                  "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-" ==========================================================================="
-" LINTING "
-" TODO: maybe also implement some fixers for automated code formatting?
-" ==========================================================================="
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  LINTING                                   "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:linter_phpcs_standard="PSR2"
 
 augroup Linting
 	autocmd!
@@ -77,14 +78,16 @@ augroup Linting
 	" javascript
 	autocmd FileType javascript setlocal makeprg=eslint\ --format=unix\ %
 	autocmd BufWritePost *.js silent make! <afile> | silent redraw!
+	" php
+	autocmd FileType php execute('setlocal makeprg=phpcs\ --standard='.g:linter_phpcs_standard.'\ --report=emacs\ %')
+	autocmd BufWritePost *.php silent make! <afile> | silent redraw!
 	autocmd QuickFixCmdPost [^l]* cwindow
 augroup END
 
-" ==========================================================================="
-" PROJECT SPECIFIC VIMRC "
-" ==========================================================================="
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           PROJECT SPECIFIC VIMRC                           "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" work on a more simple solution
 if !exists("*LoadProjectVimrc")
   function! LoadProjectVimrc()
     let vimrcFile = findfile(".vimrc", ".;")
@@ -98,9 +101,9 @@ if !exists("*LoadProjectVimrc")
 endif
 autocmd DirChanged * :call LoadProjectVimrc()
 
-" ==========================================================================="
-" HELPERS "
-" ==========================================================================="
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  HELPERS                                   "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " write
 nnoremap <C-s> :write<CR>
