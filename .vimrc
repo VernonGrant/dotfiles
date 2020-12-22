@@ -10,14 +10,14 @@ Plug 'honza/vim-snippets'
 call plug#end()
 
 " general
+set exrc
+set hlsearch
 set enc=utf-8
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
 set belloff=all
 set colorcolumn=80,120
-set exrc
-set hlsearch
 set noswapfile
 set shell=/bin/zsh\ -l
 set tags+=tags;\\~
