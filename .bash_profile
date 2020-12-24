@@ -34,6 +34,7 @@ find . -type d -exec chmod 755 {} \;
 alias clean-project='
 find . -name ".DS_Store" -type f -delete
 find . -name ".idea" -type d -exec rm -r {} \;
+find . -name ".vscode" -type d -exec rm -r {} \;
 '
 
 # Edit and update hosts file.
