@@ -70,6 +70,7 @@ rsync -a --delete --progress /Volumes/Socrates/Jackie /Volumes/Backups/
 rsync -a --delete --progress /Volumes/Socrates/Photos /Volumes/Backups/
 rsync -a --delete --progress /Volumes/Socrates/Projects /Volumes/Backups/
 rsync -a --delete --progress /Volumes/Socrates/ProjectAssets /Volumes/Backups/
+rsync -a --delete --progress /Volumes/Socrates/Business /Volumes/Backups/
 '
 
 # ========================================
