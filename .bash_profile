@@ -34,7 +34,6 @@ find . -type d -exec chmod 755 {} \;
 alias clean-project='
 find . -name ".DS_Store" -type f -delete
 find . -name ".idea" -type d -exec rm -r {} \;
-find . -name ".vscode" -type d -exec rm -r {} \;
 '
 
 # Edit and update hosts file.
@@ -95,8 +94,13 @@ sudo rm /Library/LaunchDaemons/com.adobe.*.plist
 
 # composer
 PATH=$HOME/.composer/vendor/bin:$PATH
-
 export PATH
+
+# install and set wordpress coding standards to phpcs
+alias phpcs-install-wordpress='
+composer global require wp-coding-standards/wpcs &&
+phpcs --config-set installed_paths /Users/vernon/.composer/vendor/wp-coding-standards/wpcs/
+'
 
 # ========================================
 # SETUP SCRIPTS

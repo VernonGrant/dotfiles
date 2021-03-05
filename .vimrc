@@ -22,6 +22,7 @@ set noswapfile
 set shell=/bin/zsh\ -l
 set tags+=tags;\\~
 set undolevels=1000
+set nowrap
 
 " paths
 set path+=~/notes/**,~/vim-sessions/**
