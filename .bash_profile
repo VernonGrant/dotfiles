@@ -99,6 +99,7 @@ export PATH
 # install and set wordpress coding standards to phpcs
 alias phpcs-install-wordpress='
 composer global require wp-coding-standards/wpcs &&
+composer global require phpcompatibility/phpcompatibility-wp &&
 phpcs --config-set installed_paths /Users/vernon/.composer/vendor/wp-coding-standards/wpcs/
 '
 
