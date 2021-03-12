@@ -23,6 +23,7 @@ set shell=/bin/zsh\ -l
 set tags+=tags;\\~
 set undolevels=1000
 set nowrap
+set laststatus=2
 
 " paths
 set path+=~/notes/**,~/vim-sessions/**
@@ -58,6 +59,26 @@ highlight Pmenu guibg=#181818
 highlight PmenuSel guifg=indianred guibg=#181818
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                STATUS LINE                                 "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+highlight VertSplit guibg=#181818 guifg=#996228
+highlight SLBackground guibg=#181818 guifg=#996228
+highlight SLFileType guibg=indianred guifg=#663333
+highlight SLBufNumber guibg=SeaGreen guifg=#003333
+highlight SLLineNumber guibg=#80a0ff guifg=#003366
+
+set statusline=\%#SLBackground#
+set statusline+=\ %F
+set statusline+=\%= " separator
+set statusline+=\ %#SLFileType#
+set statusline+=\ FT:\ %Y
+set statusline+=\ %#SLBufNumber#
+set statusline+=\ BN:\ %n
+set statusline+=\ %#SLLineNumber#
+set statusline+=\ LN:\ %l
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 ULTISNIPS                                  "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -71,19 +92,19 @@ let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 let g:linter_phpcs_standard="PSR2"
 
-augroup Linting
-	autocmd!
+"augroup Linting
+	" autocmd!
 	" css,scss,sass
-	autocmd FileType css setlocal makeprg=stylelint\ --formatter=unix\ %
-	autocmd BufWritePost *.css,*.scss,*.sass silent make! <afile> | silent redraw!
+	" autocmd FileType css setlocal makeprg=stylelint\ --formatter=unix\ %
+	" autocmd BufWritePost *.css,*.scss,*.sass silent make! <afile> | silent redraw!
 	" javascript
-	autocmd FileType javascript setlocal makeprg=eslint\ --format=unix\ %
-	autocmd BufWritePost *.js silent make! <afile> | silent redraw!
+	" autocmd FileType javascript setlocal makeprg=eslint\ --format=unix\ %
+	" autocmd BufWritePost *.js silent make! <afile> | silent redraw!
 	" php
-	autocmd FileType php execute('setlocal makeprg=phpcs\ --standard='.g:linter_phpcs_standard.'\ --report=emacs\ %')
-	autocmd BufWritePost *.php silent make! <afile> | silent redraw!
-	autocmd QuickFixCmdPost [^l]* cwindow
-augroup END
+	" autocmd FileType php execute('setlocal makeprg=phpcs\ --standard='.g:linter_phpcs_standard.'\ --report=emacs\ %')
+	" autocmd BufWritePost *.php silent make! <afile> | silent redraw!
+	"autocmd QuickFixCmdPost [^l]* cwindow
+"augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           PROJECT SPECIFIC VIMRC                           "
@@ -120,6 +141,8 @@ nnoremap <leader>s :vimgrep //g **/*.js<S-left><S-left><right>
 nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
+
+" terminal bindings
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
 tnoremap <Esc> <C-\><C-n>
 
