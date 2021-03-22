@@ -101,6 +101,9 @@ fun RunQuickfixLinter(command)
 	execute ':cex system("' . expand(a:command) . ' ' . expand("%") '") | copen'
 endf
 
+fun LintChangedFiles()
+	" Lints all git changed files and add's them to the quickfix window.
+endf
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   TASKS                                    "
