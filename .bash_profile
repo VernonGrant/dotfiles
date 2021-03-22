@@ -53,7 +53,6 @@ rsync -a --delete --progress ~/.bash_profile /Volumes/Backups/Home/
 rsync -a --delete --progress ~/.ctags /Volumes/Backups/Home/
 rsync -a --delete --progress ~/.gitconfig /Volumes/Backups/Home/
 rsync -a --delete --progress ~/.gitignore_global /Volumes/Backups/Home/
-rsync -a --delete --progress ~/.NERDTreeBookmarks /Volumes/Backups/Home/
 rsync -a --delete --progress ~/.ssh /Volumes/Backups/Home/
 rsync -a --delete --progress ~/.viminfo /Volumes/Backups/Home/
 rsync -a --delete --progress ~/.vimrc /Volumes/Backups/Home/
