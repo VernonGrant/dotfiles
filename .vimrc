@@ -175,6 +175,7 @@ vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
 nnoremap ciq ci"
 nnoremap ciQ ci'
+nnoremap <leader>of :!open %:h<CR>
 
 " terminal bindings
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
