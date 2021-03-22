@@ -61,13 +61,13 @@ highlight ColorColumn guibg=#181818
 highlight Comment guifg=#996228
 highlight Pmenu guibg=#181818
 highlight PmenuSel guifg=indianred guibg=#181818
+highlight VertSplit guibg=#181818 guifg=#996228
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                STATUS LINE                                 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-highlight VertSplit guibg=#181818 guifg=#996228
 highlight SLBackground guibg=#181818 guifg=#996228
 highlight SLFileType guibg=indianred guifg=#663333
 highlight SLBufNumber guibg=SeaGreen guifg=#003333
@@ -96,33 +96,22 @@ let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  LINTING                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TODO: Properly implement official linting for the following languages:
-" - PHP
-" - JavaScript
-" - CSS/SCSS
-let g:linter_phpcs_standard="PSR2"
 
-"augroup Linting
-" autocmd!
-" css,scss,sass
-" autocmd FileType css setlocal makeprg=stylelint\ --formatter=unix\ %
-" autocmd BufWritePost *.css,*.scss,*.sass silent make! <afile> | silent redraw!
-" javascript
-" autocmd FileType javascript setlocal makeprg=eslint\ --format=unix\ %
-" autocmd BufWritePost *.js silent make! <afile> | silent redraw!
-" php
-" autocmd FileType php execute('setlocal makeprg=phpcs\ --standard='.g:linter_phpcs_standard.'\ --report=emacs\ %')
-" autocmd BufWritePost *.php silent make! <afile> | silent redraw!
-"autocmd QuickFixCmdPost [^l]* cwindow
-"augroup END
+fun RunQuickfixLinter(command)
+	execute ':cex system("' . expand(a:command) . ' ' . expand("%") '") | copen'
+endf
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   TASKS                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" holds the global tasks
+" holds the global tasks.
 let g:GlobalTasks = {'Git Status:': '!git status'}
+let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - PHP': "call RunQuickfixLinter('phpcs --standard=PSR2 --report=emacs')"})
+let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - PHP (WordPress)': "call RunQuickfixLinter('phpcs --standard=WordPress --report=emacs')"})
+let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - JavaScript': "call RunQuickfixLinter('eslint --format=unix')"})
+let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - CSS/SASS': "call RunQuickfixLinter('stylelint --formatter=unix')"})
 
 fun GetNumberedDictKeys(taskDict)
 	" Extracts the task keys and returns them as a numbered list.
@@ -183,6 +172,8 @@ nnoremap <leader>s :vimgrep //g **/*.js<S-left><S-left><right>
 nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
+nnoremap ciq ci"
+nnoremap ciQ ci'
 
 " terminal bindings
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
