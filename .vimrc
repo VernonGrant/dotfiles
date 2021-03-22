@@ -108,6 +108,7 @@ endf
 
 " holds the global tasks.
 let g:GlobalTasks = {'Git Status:': '!git status'}
+let g:GlobalTasks = extend(g:GlobalTasks, {'Docker Up': "tab term docker-\compose up"})
 let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - PHP': "call RunQuickfixLinter('phpcs --standard=PSR2 --report=emacs')"})
 let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - PHP (WordPress)': "call RunQuickfixLinter('phpcs --standard=WordPress --report=emacs')"})
 let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - JavaScript': "call RunQuickfixLinter('eslint --format=unix')"})
