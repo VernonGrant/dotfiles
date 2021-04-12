@@ -6,7 +6,16 @@
 !.gitignore_global
 
 # bash
-!.bash_profile
+!.bash_aliases
+
+# tmux
+!.tmux.conf
+
+# hyper
+!.hyper.js
+
+# conky
+!.conkyrc
 
 # vim
 !.vimrc

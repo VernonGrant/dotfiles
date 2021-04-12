@@ -2,17 +2,18 @@
 "                              GENERAL SETTINGS                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" hello
 " vim plug
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'morhetz/gruvbox'
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 " general
-" TODO: Learn more about this setting, and check if you can replace the custom
-" vimrc loading function you implemented.
-" set exrc
+set exrc
 set hlsearch
 set enc=utf-8
 set encoding=utf-8
@@ -21,27 +22,21 @@ set fileencodings=ucs-bom,utf8,prc
 set belloff=all
 set colorcolumn=80,120
 set noswapfile
-set shell=/bin/zsh\ -l
+set shell=/bin/bash
 set tags+=tags;\\~
 set undolevels=1000
 set nowrap
 set laststatus=2
 set number
 set relativenumber
+set clipboard=unnamedplus
 
 " paths
-set path+=~/notes/**,~/vim-sessions/**
-
-" is work conditions
-set iskeyword+=-
+set path+=/mnt/development_drive/notes/**
 
 " ignore some stuff
 set wildignore+=*.so,*.o,*.zip,*.pdf,*.png,*.jpg,*.jpeg
 set wildignore+=*/.git/*,*/node_modules/*,*/vendor/*
-
-" gui
-set guioptions-=L,R,l,r
-autocmd! GUIEnter * set vb t_vb=
 
 " trim trailing spaces
 autocmd BufWritePre * :%s/\s\+$//e
@@ -49,40 +44,10 @@ autocmd BufWritePre * :%s/\s\+$//e
 " leader
 let mapleader="\<Space>"
 
-" color scheme settings.
-let macvim_skip_colorscheme = 1
-set guifont=Menlo\ Regular:h16
-set background=dark
-colorscheme desert
-highlight Normal guibg=#212121
-highlight Search guifg=#ffffff guibg=#996228
-highlight Todo guifg=#ffffff guibg=#4f7a28
-highlight ColorColumn guibg=#181818
-highlight Comment guifg=#996228
-highlight Pmenu guibg=#181818
-highlight PmenuSel guifg=indianred guibg=#181818
-highlight VertSplit guibg=#181818 guifg=#996228
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                STATUS LINE                                 "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-highlight SLBackground guibg=#181818 guifg=#996228
-highlight SLFileType guibg=indianred guifg=#663333
-highlight SLBufNumber guibg=SeaGreen guifg=#003333
-highlight SLLineNumber guibg=#80a0ff guifg=#003366
-
-set statusline=\%#SLBackground#
-set statusline+=\ %F
-set statusline+=\%= " separator
-set statusline+=\ %#SLFileType#
-set statusline+=\ FT:\ %Y
-set statusline+=\ %#SLBufNumber#
-set statusline+=\ BN:\ %n
-set statusline+=\ %#SLLineNumber#
-set statusline+=\ LN:\ %l
-
+" colorscheme
+set t_Co=256
+colorscheme gruvbox
+set bg=dark
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                 ULTISNIPS                                  "
@@ -101,21 +66,33 @@ fun RunQuickfixLinter(command)
 	execute ':cex system("' . expand(a:command) . ' ' . expand("%") '") | copen'
 endf
 
-fun LintChangedFiles()
-	" Lints all git changed files and add's them to the quickfix window.
+" lint all changed wordpress php files.
+fun LintAllChangedPHPWordPressFiles()
+	" git changed files names.
+	" git diff --name-only
+	"
+	" ignore deleted files.
+	" git diff --name-only --diff-filter=ACMRRTUXB
+	"
+	" get only certian file types.
+	" git diff --name-only --diff-filter=ACMRRTUXB | grep -E \"(.php)\"
+	execute ':cex system("phpcs --standard=WordPress --report=emacs $(git diff --name-only --diff-filter=ACMRRTUXB | grep -E \"(.php)\")") | copen'
 endf
+
+fun LintAllChangedCSSWordPressFiles()
+	execute ':cex system("stylelint --formatter=unix $(git diff --name-only --diff-filter=ACMRRTUXB | grep -E \"(.css$|.scss$)\")") | copen'
+endf
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   TASKS                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " holds the global tasks.
-let g:GlobalTasks = {'Git Status:': '!git status'}
-let g:GlobalTasks = extend(g:GlobalTasks, {'Docker Up': "tab term docker-\compose up"})
-let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - PHP': "call RunQuickfixLinter('phpcs --standard=PSR2 --report=emacs')"})
-let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - PHP (WordPress)': "call RunQuickfixLinter('phpcs --standard=WordPress --report=emacs')"})
+let g:GlobalTasks = {'Lint - PHP (WP):': "call RunQuickfixLinter('phpcs --standard=WordPress --report=emacs')"}
 let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - JavaScript': "call RunQuickfixLinter('eslint --format=unix')"})
 let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - CSS/SASS': "call RunQuickfixLinter('stylelint --formatter=unix')"})
+let g:GlobalTasks = extend(g:GlobalTasks, {'Lint Changes - PHP (WP)': "call LintAllChangedPHPWordPressFiles()"})
+let g:GlobalTasks = extend(g:GlobalTasks, {'Lint Changes - CSS/SASS (WP)': "call LintAllChangedCSSWordPressFiles()"})
 
 fun GetNumberedDictKeys(taskDict)
 	" Extracts the task keys and returns them as a numbered list.
@@ -139,34 +116,21 @@ endf
 
 nnoremap <leader>t :call RunGlobalTask()<CR>
 
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                           PROJECT SPECIFIC VIMRC                           "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-if !exists("*LoadProjectVimrc")
-	function! LoadProjectVimrc()
-		let vimrcFile = findfile(".vimrc", ".;")
-
-		if !empty(l:vimrcFile)
-			execute ":so" l:vimrcFile
-			echom "A project specifc vimrc has been loaded."
-		endif
-	endfunction
-endif
-autocmd DirChanged * :call LoadProjectVimrc()
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  HELPERS                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" write
-nnoremap <C-s> :write<CR>
+" allows me to copy and past across multiple vim instances.
+vmap <leader>y :w! /tmp/vitmp<CR>
+nmap <leader>p :r! cat /tmp/vitmp<CR>
 
 " workflow
+nnoremap <leader>gs :Git<CR>
+nnoremap <leader>gp :Gpush<CR>
+nnoremap <leader>gP :Gpull<CR>
+nnoremap <leader>q :q<CR>
 nnoremap <leader>f :find<space>
-nnoremap <leader>b :find<space>
+nnoremap <leader>b :buffer<space>
 nnoremap <leader>d :find %:p:h<CR>
 nnoremap <leader>D :e.<CR>
 nnoremap <leader>h :noh<CR>
@@ -176,9 +140,6 @@ nnoremap <leader>s :vimgrep //g **/*.js<S-left><S-left><right>
 nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
-nnoremap ciq ci"
-nnoremap ciQ ci'
-nnoremap <leader>of :!open %:h<CR>
 
 " terminal bindings
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
