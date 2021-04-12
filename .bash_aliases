@@ -7,6 +7,11 @@ gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 15
 gsettings set org.gnome.desktop.peripherals.keyboard delay 180
 '
 
+alias reload-conky='
+killall conky
+conky & disown
+'
+
 # General
 alias c='clear'
 
