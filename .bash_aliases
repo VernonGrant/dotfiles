@@ -1,7 +1,7 @@
 # shorten bash path
 PROMPT_DIRTRIM=1
 
-# Setup
+# System and system setup
 alias setkeyrepeat='
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 15
 gsettings set org.gnome.desktop.peripherals.keyboard delay 180
@@ -15,7 +15,10 @@ conky & disown
 # General
 alias c='clear'
 
-# Bash profile
+alias edit-hosts='
+sudo vim /ets/hosts
+'
+
 alias reload='. ~/.bashrc'
 
 # SSH
@@ -34,9 +37,6 @@ alias reset-permissions='
 find . -type f -exec chmod 644 {} \;
 find . -type d -exec chmod 755 {} \;
 '
-
-# Projects
-alias cdp='cd /mnt/development_drive/projects/'
 
 alias clean-project='
 find . -name ".DS_Store" -type f -delete
@@ -83,3 +83,7 @@ alias tk='tmux kill-session -t'
 
 # stop all
 alias dsa='docker stop $(docker ps -a -q)'
+
+# Remove Server Aliases
+
+llias cdpr='cd /mnt/development_drive/projects/'
