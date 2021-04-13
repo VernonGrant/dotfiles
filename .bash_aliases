@@ -1,7 +1,7 @@
 # shorten bash path
 PROMPT_DIRTRIM=1
 
-# System and system setup
+# Linux Helpers
 alias setkeyrepeat='
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 15
 gsettings set org.gnome.desktop.peripherals.keyboard delay 180
@@ -12,8 +12,11 @@ killall conky
 conky & disown
 '
 
+alias update='sudo apt-get update && sudo apt-get dist-upgrade'
+
 # General
 alias c='clear'
+
 
 alias edit-hosts='
 sudo vim /ets/hosts
