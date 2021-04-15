@@ -124,6 +124,11 @@ nnoremap <leader>t :call RunGlobalTask()<CR>
 vmap <leader>y :w! /tmp/vitmp<CR>
 nmap <leader>p :r! cat /tmp/vitmp<CR>
 
+" use CTRL-S for saving, also in Insert mode
+noremap <C-S> :update<CR>
+vnoremap <C-S> <C-C>:update<CR>
+inoremap <C-S> <C-O>:update<CR>
+
 " workflow
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gp :Gpush<CR>

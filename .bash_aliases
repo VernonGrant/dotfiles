@@ -6,7 +6,7 @@
 PROMPT_DIRTRIM=1
 
 # Linux Helpers
-alias setkeyrepeat='
+alias set-key-repeat='
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 15
 gsettings set org.gnome.desktop.peripherals.keyboard delay 180
 '
@@ -64,16 +64,7 @@ find . -name "*.pyc" -type f -prune
 '
 
 # Backups
-alias backmeup='
-mkdir -p /mnt/development_drive/backups/
-rsync -a --delete --progress ~/.bash_aliases /mnt/development_drive/backups/me/
-rsync -a --delete --progress ~/.ctags /mnt/development_drive/backups/me/
-rsync -a --delete --progress ~/.tmux.conf /mnt/development_drive/backups/me/
-rsync -a --delete --progress ~/.vimrc /mnt/development_drive/backups/home/
-rsync -a --delete --progress ~/.gitconfig /mnt/development_drive/backups/home/
-rsync -a --delete --progress ~/.gitignore_global /mnt/development_drive/backups/home/
-rsync -a --delete --progress ~/.ssh /mnt/development_drive/backups/home/
-'
+alias back-me-up='. ~/.scripts/backup-local.sh'
 
 # Tmux
 
@@ -89,19 +80,31 @@ alias tl='tmux list-sessions'
 # Kill a session.
 alias tk='tmux kill-session -t'
 
-# Remove Server Aliases
-alias cdpr='cd /mnt/development_drive/projects/'
+# Kill all sessions.
+alias tka='tmux kill-server'
 
 # Docker stop all
-alias dsa='docker stop $(docker ps -a -q)'
+alias docker-sa='docker stop $(docker ps -a -q)'
 
+#######################################################################
+#                          GLOBAL VARIABLES                           #
+#######################################################################
+
+REMOTE_PROJECTS_PATH='/mnt/development_drive/projects'
+LOCAL_PROJECTS_PATH='/home/vernon/Devenv/projects'
+
+#######################################################################
+#                                TMUX                                 #
+#######################################################################
+
+function tmux-setup() {
+	. ~/.scripts/tmux-setup.sh
+}
 
 #######################################################################
 #                   GLOBAL ALIASES, LOCAL & REMOTE                    #
 #######################################################################
 
-REMOTE_PROJECTS_PATH='/mnt/development_drive/projects'
-LOCAL_PROJECTS_PATH='/home/vernon/Devenv/projects'
 
 # make sure the remote permissions are correct.
 # $1, the folder path of the project from within the projects folder.
