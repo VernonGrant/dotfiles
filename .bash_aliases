@@ -24,7 +24,6 @@ sudo apt-get dist-upgrade
 # General
 alias c='clear'
 
-
 alias edit-hosts='
 sudo vim /etc/hosts
 '
@@ -87,6 +86,17 @@ alias tka='tmux kill-server'
 alias docker-sa='docker stop $(docker ps -a -q)'
 
 #######################################################################
+#                          HELPER FUNCTIONS                           #
+#######################################################################
+
+# Pulls a mysql database from my remote development server.
+# sudo apt install poppler-utils
+# $1, pdf file
+function pdf-to-jpg() {
+	pdftoppm -jpeg $1 page
+}
+
+#######################################################################
 #                          GLOBAL VARIABLES                           #
 #######################################################################
 
@@ -104,7 +114,6 @@ function tmux-setup() {
 #######################################################################
 #                   GLOBAL ALIASES, LOCAL & REMOTE                    #
 #######################################################################
-
 
 # make sure the remote permissions are correct.
 # $1, the folder path of the project from within the projects folder.
@@ -131,13 +140,28 @@ function getRemoteDockerDatabase() {
 	rsync -a --delete --progress $1:~/temp/$2.sql ./
 }
 
+# Pulls a mysql database from my remote development server.
+# $1, the ssh connection string.
+# $2, the mysql user.
+# $3, the mysql user password.
+# $4, the mysql database name.
+function getRemoteDatabase() {
+	# dump database on server.
+	ssh $1 "mkdir -p ~/temp"
+	ssh $1 "mysqldump --user=\"$2\" --password=\"$3\" $4 > ~/temp/$4.sql"
+	ssh $1 "ls -la ~/temp/"
+
+	# rsync it down.
+	rm -f ./$4.sql
+	rsync -a --delete --progress $1:~/temp/$4.sql ./
+}
 
 # should be used in wordpress project root only.
 # $1, the ssh connection string.
 # $2, the path where the wordpress uploads, plugins are.
 function syncRemoteWordPressData() {
-	rsync -a --delete --progress $1:$REMOTE_PROJECTS_PATH$2/uploads ./docker-data/
-	rsync -au --progress $1:$REMOTE_PROJECTS_PATH$2/plugins ./docker-data/
+	rsync -av --delete $1:$2/uploads ./docker-data/
+	rsync -auv $1:$2/plugins ./docker-data/
 }
 
 # make sure the local permissions are correct.
@@ -149,6 +173,17 @@ function setLocalProjectPermissions() {
 	sudo find . -name "plugins" -type d -exec chown -R www-data:www-data {} \;
 	cd -
 }
+
+# Give me full access to all project files.
+# $1, the root path.
+function setLocalProjectControlPermissions() {
+	cd $1
+	echo 'secret' | sudo -S find . -name "mysql" -type d -exec chown -R vernon:vernon {} \;
+	sudo find . -name "uploads" -type d -exec chown -R vernon:vernon {} \;
+	sudo find . -name "plugins" -type d -exec chown -R vernon:vernon {} \;
+	cd -
+}
+
 
 # Uploades the database to a running mysql container.
 # $1, the mysql container name, id.
@@ -164,7 +199,6 @@ function replaceLocalDockerDatabase() {
 	# upload database to local running container.
 	cat $2 | sudo docker exec -i $1 /usr/bin/mysql --user="$loc_mysql_user" --password="$loc_mysql_password" $loc_mysql_database
 }
-
 
 # Changes the URL of a running WordPress container.
 # $1, the wordpress container id.
