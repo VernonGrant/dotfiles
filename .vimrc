@@ -10,6 +10,7 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
+Plug 'freitass/todo.txt-vim'
 call plug#end()
 
 " general
@@ -32,7 +33,8 @@ set relativenumber
 set clipboard=unnamedplus
 
 " paths
-set path+=/mnt/development_drive/notes/**
+set path+=/home/vernon/Devenv/notes/**
+set path+=/home/vernon/.scripts/**
 
 " ignore some stuff
 set wildignore+=*.so,*.o,*.zip,*.pdf,*.png,*.jpg,*.jpeg
