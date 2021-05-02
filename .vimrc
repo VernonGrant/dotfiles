@@ -2,7 +2,6 @@
 "                              GENERAL SETTINGS                              "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" hello
 " vim plug
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
