@@ -11,6 +11,7 @@ Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
 Plug 'freitass/todo.txt-vim'
+Plug 'w0rp/ale'
 call plug#end()
 
 " general
@@ -61,40 +62,26 @@ let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                  LINTING                                   "
+"                                    ALE                                     "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-fun RunQuickfixLinter(command)
-	execute ':cex system("' . expand(a:command) . ' ' . expand("%") '") | copen'
-endf
+let b:ale_linters = ['eslint', 'stylelint', 'phpcs']
 
-" lint all changed wordpress php files.
-fun LintAllChangedPHPWordPressFiles()
-	" git changed files names.
-	" git diff --name-only
-	"
-	" ignore deleted files.
-	" git diff --name-only --diff-filter=ACMRRTUXB
-	"
-	" get only certian file types.
-	" git diff --name-only --diff-filter=ACMRRTUXB | grep -E \"(.php)\"
-	execute ':cex system("phpcs --standard=WordPress --report=emacs $(git diff --name-only --diff-filter=ACMRRTUXB | grep -E \"(.php)\")") | copen'
-endf
+" ignore minified files.
+let g:ale_pattern_options = {
+\ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
+\ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
+\}
 
-fun LintAllChangedCSSWordPressFiles()
-	execute ':cex system("stylelint --formatter=unix $(git diff --name-only --diff-filter=ACMRRTUXB | grep -E \"(.css$|.scss$)\")") | copen'
-endf
+" Show 5 lines of errors.
+let g:ale_list_window_size = 5
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   TASKS                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " holds the global tasks.
-let g:GlobalTasks = {'Lint - PHP (WP):': "call RunQuickfixLinter('phpcs --standard=WordPress --report=emacs')"}
-let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - JavaScript': "call RunQuickfixLinter('eslint --format=unix')"})
-let g:GlobalTasks = extend(g:GlobalTasks, {'Lint - CSS/SASS': "call RunQuickfixLinter('stylelint --formatter=unix')"})
-let g:GlobalTasks = extend(g:GlobalTasks, {'Lint Changes - PHP (WP)': "call LintAllChangedPHPWordPressFiles()"})
-let g:GlobalTasks = extend(g:GlobalTasks, {'Lint Changes - CSS/SASS (WP)': "call LintAllChangedCSSWordPressFiles()"})
+let g:GlobalTasks = {'NPM Install:': "!npm install"}
 
 fun GetNumberedDictKeys(taskDict)
 	" Extracts the task keys and returns them as a numbered list.
@@ -122,16 +109,14 @@ nnoremap <leader>t :call RunGlobalTask()<CR>
 "                                  HELPERS                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" allows me to copy and past across multiple vim instances.
+" update current buffer.
+nnoremap <C-S> :update<CR>
+
+" allows me to copy and past across multiple vim instances (Tmux).
 vmap <leader>y :w! /tmp/vitmp<CR>
 nmap <leader>p :r! cat /tmp/vitmp<CR>
 
-" use CTRL-S for saving, also in Insert mode
-noremap <C-S> :update<CR>
-vnoremap <C-S> <C-C>:update<CR>
-inoremap <C-S> <C-O>:update<CR>
-
-" workflow
+" workflow.
 nnoremap <leader>gs :Git<CR>
 nnoremap <leader>gp :Gpush<CR>
 nnoremap <leader>gP :Gpull<CR>
@@ -148,11 +133,11 @@ nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
 
-" terminal bindings
+" terminal bindings.
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
 tnoremap <Esc> <C-\><C-n>
 
-" quick exit insert mode
+" quick exit insert mode.
 inoremap jj <Esc>
 inoremap hh <Esc>
 inoremap kk <Esc>

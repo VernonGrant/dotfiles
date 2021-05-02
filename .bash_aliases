@@ -82,6 +82,9 @@ alias tk='tmux kill-session -t'
 # Kill all sessions.
 alias tka='tmux kill-server'
 
+# setup tmux sessions.
+alias tmux-setup=". ~/.scripts/tmux-setup.sh"
+
 # Docker stop all
 alias docker-sa='docker stop $(docker ps -a -q)'
 
@@ -96,6 +99,10 @@ function pdf-to-jpg() {
 	pdftoppm -jpeg $1 page
 }
 
+function pdf-mark-paid() {
+	qpdf $1 --overlay ~/.scripts/paid-marker.pdf -- $1-paid.pdf
+}
+
 #######################################################################
 #                          GLOBAL VARIABLES                           #
 #######################################################################
@@ -103,24 +110,34 @@ function pdf-to-jpg() {
 REMOTE_PROJECTS_PATH='/mnt/development_drive/projects'
 LOCAL_PROJECTS_PATH='/home/vernon/Devenv/projects'
 
-#######################################################################
-#                                TMUX                                 #
-#######################################################################
-
-function tmux-setup() {
-	. ~/.scripts/tmux-setup.sh
-}
 
 #######################################################################
 #                   GLOBAL ALIASES, LOCAL & REMOTE                    #
 #######################################################################
 
-# make sure the remote permissions are correct.
-# $1, the folder path of the project from within the projects folder.
-function setRemoteProjectPermissions() {
-	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "mysql" -type d -exec chown -R systemd-coredump:root {} \;"
-	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "uploads" -type d -exec chown -R www-data:www-data {} \;"
-	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "plugins" -type d -exec chown -R www-data:www-data {} \;"
+# $1, the ssh connection string.
+# $2, the path that should be pulled.
+# $3, the local destination.
+function pullRemoteFiles() {
+	rsync -auv $1:$2 $3
+}
+
+#
+# $1, the folder path.
+function setDefaultOwnership() {
+	cd $1
+	echo 'secret' | sudo -S chown -R vernon:vernon ./
+	cd -
+}
+
+#
+# $1, the folder path.
+function setDockerDataOwnership() {
+	cd $1
+	#echo 'secret' | sudo -S find . -name "mysql" -type d -exec chown -R systemd-coredump:vernon {} \;
+	echo 'secret' | sudo -S find . -name "uploads" -type d -exec chown -R www-data:www-data {} \;
+	sudo find . -name "plugins" -type d -exec chown -R www-data:www-data {} \;
+	cd -
 }
 
 # Pulls a mysql database from my remote development server.
@@ -140,6 +157,38 @@ function getRemoteDockerDatabase() {
 	rsync -a --delete --progress $1:~/temp/$2.sql ./
 }
 
+# Uploades the database to a running mysql container.
+# $1, the mysql container name, id.
+# $2, the mysql database path.
+function uploadDatabaseToDockerContainer() {
+	local loc_mysql_user="root"
+	local loc_mysql_password="my-secret-pw"
+	local loc_mysql_database="exampledb"
+
+	# avoid asking for sudo password.
+	echo 'secret' | sudo -S ls ./
+
+	# upload database to local running container.
+	cat $2 | sudo docker exec -i $1 /usr/bin/mysql --user="$loc_mysql_user" --password="$loc_mysql_password" $loc_mysql_database
+}
+
+# Changes the URL of a running WordPress container.
+# $1, the wordpress container id.
+# $2, the current url.
+# $3, the replacement url.
+function changeDockerContainerWordPressURL() {
+	# avoid asking for sudo password.
+	echo 'secret' | sudo -S ls ./
+
+	# install wordpress cli.
+	sudo docker exec -i $1 sh -c "cd /var/www/html && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+	sudo docker exec -i $1 sh -c "cd /var/www/html && chmod +x wp-cli.phar"
+	sudo docker exec -i $1 sh -c "cd /var/www/html && mv wp-cli.phar /usr/local/bin/wp"
+
+	# replace wordpress url.
+	sudo docker exec -i $1 sh -c "cd /var/www/html && wp search-replace --all-tables '$2' '$3' --allow-root"
+}
+
 # Pulls a mysql database from my remote development server.
 # $1, the ssh connection string.
 # $2, the mysql user.
@@ -156,12 +205,12 @@ function getRemoteDatabase() {
 	rsync -a --delete --progress $1:~/temp/$4.sql ./
 }
 
-# should be used in wordpress project root only.
-# $1, the ssh connection string.
-# $2, the path where the wordpress uploads, plugins are.
-function syncRemoteWordPressData() {
-	rsync -av --delete $1:$2/uploads ./docker-data/
-	rsync -auv $1:$2/plugins ./docker-data/
+# replace match with provided string. Uses vim like patterns.
+# $1, path of file.
+# $2, match.
+# $3, replacement.
+function replaceInFile() {
+	sed -i "s/$2/$3/g" $1
 }
 
 # make sure the local permissions are correct.
@@ -174,17 +223,22 @@ function setLocalProjectPermissions() {
 	cd -
 }
 
-# Give me full access to all project files.
-# $1, the root path.
-function setLocalProjectControlPermissions() {
-	cd $1
-	echo 'secret' | sudo -S find . -name "mysql" -type d -exec chown -R vernon:vernon {} \;
-	sudo find . -name "uploads" -type d -exec chown -R vernon:vernon {} \;
-	sudo find . -name "plugins" -type d -exec chown -R vernon:vernon {} \;
-	cd -
+
+
+# Old Functions Below.
+
+# TODO: remove.
+# still used by, aap, miogyn.
+# make sure the remote permissions are correct.
+# $1, the folder path of the project from within the projects folder.
+function setRemoteProjectPermissions() {
+	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "mysql" -type d -exec chown -R systemd-coredump:root {} \;"
+	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "uploads" -type d -exec chown -R www-data:www-data {} \;"
+	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "plugins" -type d -exec chown -R www-data:www-data {} \;"
 }
 
-
+# TODO: remove.
+# still used by, aap, miogyn, ecsaf.
 # Uploades the database to a running mysql container.
 # $1, the mysql container name, id.
 # $2, the mysql database path.
@@ -200,6 +254,9 @@ function replaceLocalDockerDatabase() {
 	cat $2 | sudo docker exec -i $1 /usr/bin/mysql --user="$loc_mysql_user" --password="$loc_mysql_password" $loc_mysql_database
 }
 
+
+# TODO: remove.
+# still used by, aap, ecsaf.
 # Changes the URL of a running WordPress container.
 # $1, the wordpress container id.
 # $2, the current url.
@@ -217,10 +274,3 @@ function replaceLocalDockerWordPressURL() {
 	sudo docker exec -i $1 sh -c "cd /var/www/html && wp search-replace --all-tables '$2' '$3' --allow-root"
 }
 
-# replace match with provided string. Uses vim like patterns.
-# $1, path of file.
-# $2, match.
-# $3, replacement.
-function replaceInFile() {
-	sed -i "s/$2/$3/g" $1
-}
