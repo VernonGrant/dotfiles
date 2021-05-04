@@ -57,6 +57,12 @@
 --regex-PHP=/(abstract |final )class ([^ ]*)/\\1/c/
 --regex-PHP=/(public |static |final |abstract |protected |private )+function ([^ (]*)/\\2/f/
 
+--langdef=dart
+--langmap=dart:.dart
+--regex-dart=/^[ \t]*enum[ \t]+([_A-Za-z][_0-9A-Za-z]*)/\1/e,enum/
+--regex-dart=/^[ \t]*class[ \t]+([_A-Za-z][_0-9A-Za-z]*)/\1/c,class/
+--regex-dart=/^[ \t]*var[ \t]+([_A-Za-z][_0-9A-Za-z]*)/\1/v,variable/
+
 /*
  * Javascript ES6 support.
  *

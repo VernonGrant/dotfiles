@@ -11,6 +11,7 @@ Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
 Plug 'freitass/todo.txt-vim'
 Plug 'w0rp/ale'
+Plug 'dart-lang/dart-vim-plugin'
 call plug#end()
 
 " general
@@ -64,7 +65,7 @@ let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 "                                    ALE                                     "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let b:ale_linters = ['eslint', 'stylelint', 'phpcs']
+let b:ale_linters = ['eslint', 'stylelint', 'phpcs', 'dart']
 
 " ignore minified files.
 let g:ale_pattern_options = {
@@ -75,6 +76,12 @@ let g:ale_pattern_options = {
 " Show 5 lines of errors.
 let g:ale_list_window_size = 5
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                    DART                                    "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:dart_style_guide = 2
+let g:dart_format_on_save = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   TASKS                                    "
@@ -109,7 +116,9 @@ nnoremap <leader>t :call RunGlobalTask()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " update current buffer.
-nnoremap <C-S> :update<CR>
+noremap <silent><C-S> :w<CR>
+vnoremap <silent><C-S> <C-C>:w<CR>
+inoremap <silent><C-S> <C-O>:w<CR>
 
 " allows me to copy and past across multiple vim instances (Tmux).
 vmap <leader>y :w! /tmp/vitmp<CR>

@@ -8,7 +8,7 @@ PROMPT_DIRTRIM=1
 # Linux Helpers
 alias set-key-repeat='
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 15
-gsettings set org.gnome.desktop.peripherals.keyboard delay 180
+gsettings set org.gnome.desktop.peripherals.keyboard delay 150
 '
 
 alias reload-conky='
