@@ -117,9 +117,7 @@ nnoremap <leader>t :call RunGlobalTask()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " update current buffer.
-noremap <C-S> :w<CR>
-vnoremap <C-S> <Esc>:w<CR>
-inoremap <C-S> <Esc>:w<CR>
+nnoremap <C-S> :w<CR>
 
 " allows me to copy and past across multiple vim instances (Tmux).
 vmap <leader>y :w! /tmp/vitmp<CR>
