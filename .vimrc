@@ -32,6 +32,7 @@ set laststatus=2
 set number
 set relativenumber
 set clipboard=unnamedplus
+set list listchars=nbsp:¬,tab:»·,trail:·,extends:>
 
 " paths
 set path+=/home/vernon/Devenv/notes/**
@@ -116,9 +117,9 @@ nnoremap <leader>t :call RunGlobalTask()<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " update current buffer.
-noremap <silent><C-S> :w<CR>
-vnoremap <silent><C-S> <C-C>:w<CR>
-inoremap <silent><C-S> <C-O>:w<CR>
+noremap <C-S> :w<CR>
+vnoremap <C-S> <Esc>:w<CR>
+inoremap <C-S> <Esc>:w<CR>
 
 " allows me to copy and past across multiple vim instances (Tmux).
 vmap <leader>y :w! /tmp/vitmp<CR>
