@@ -31,7 +31,6 @@ set nowrap
 set laststatus=2
 set number
 set relativenumber
-set clipboard=unnamedplus
 set list listchars=nbsp:¬,tab:»·,trail:·,extends:>
 
 " paths
@@ -77,12 +76,13 @@ let g:ale_pattern_options = {
 " Show 5 lines of errors.
 let g:ale_list_window_size = 5
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                    DART                                    "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:dart_style_guide = 2
-let g:dart_format_on_save = 1
+let g:dart_format_on_save = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                   TASKS                                    "
@@ -112,6 +112,7 @@ endf
 
 nnoremap <leader>t :call RunGlobalTask()<CR>
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                                  HELPERS                                   "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -135,10 +136,12 @@ nnoremap <leader>D :e.<CR>
 nnoremap <leader>h :noh<CR>
 nnoremap <leader>i :r %:p:h<tab>
 nnoremap <leader>pt :tab term<CR>
-nnoremap <leader>s :vimgrep //g **/*.js<S-left><S-left><right>
 nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
 vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
 nnoremap <C-tab> :tabnext<CR>
+
+" vimgrep
+nnoremap <expr> <leader>s ':vimgrep "'. escape(input('Find: '), '"') .'" ' . getcwd() . '/**/*.' . expand("%:e")
 
 " terminal bindings.
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
