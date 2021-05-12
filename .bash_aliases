@@ -7,8 +7,13 @@ PROMPT_DIRTRIM=1
 
 # Linux Helpers
 alias set-key-repeat='
+xset r rate 150 60
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 15
 gsettings set org.gnome.desktop.peripherals.keyboard delay 150
+'
+
+alias stress-test='
+stress --cpu 12 --vm 14 --vm-bytes 1024M --timeout 120
 '
 
 alias reload-conky='
@@ -107,9 +112,7 @@ function pdf-mark-paid() {
 #                          GLOBAL VARIABLES                           #
 #######################################################################
 
-REMOTE_PROJECTS_PATH='/mnt/development_drive/projects'
 LOCAL_PROJECTS_PATH='/home/vernon/Devenv/projects'
-
 
 #######################################################################
 #                   GLOBAL ALIASES, LOCAL & REMOTE                    #
@@ -120,6 +123,13 @@ LOCAL_PROJECTS_PATH='/home/vernon/Devenv/projects'
 # $3, the local destination.
 function pullRemoteFiles() {
 	rsync -auv $1:$2 $3
+}
+
+# $1, the path that should be pushed.
+# $2, the ssh connection string.
+# $3, the remote destination.
+function pushLocalFiles() {
+	rsync -auv $1 $2:$3
 }
 
 #
@@ -202,7 +212,7 @@ function getRemoteDatabase() {
 
 	# rsync it down.
 	rm -f ./$4.sql
-	rsync -a --delete --progress $1:~/temp/$4.sql ./
+	rsync -a --delete $1:~/temp/$4.sql ./
 }
 
 # replace match with provided string. Uses vim like patterns.
@@ -223,19 +233,7 @@ function setLocalProjectPermissions() {
 	cd -
 }
 
-
-
 # Old Functions Below.
-
-# TODO: remove.
-# still used by, aap, miogyn.
-# make sure the remote permissions are correct.
-# $1, the folder path of the project from within the projects folder.
-function setRemoteProjectPermissions() {
-	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "mysql" -type d -exec chown -R systemd-coredump:root {} \;"
-	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "uploads" -type d -exec chown -R www-data:www-data {} \;"
-	ssh Dev "cd $REMOTE_PROJECTS_PATH && cd $1 && find . -name "plugins" -type d -exec chown -R www-data:www-data {} \;"
-}
 
 # TODO: remove.
 # still used by, aap, miogyn, ecsaf.
@@ -273,4 +271,3 @@ function replaceLocalDockerWordPressURL() {
 	# replace wordpress url.
 	sudo docker exec -i $1 sh -c "cd /var/www/html && wp search-replace --all-tables '$2' '$3' --allow-root"
 }
-
