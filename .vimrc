@@ -1,93 +1,95 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                              GENERAL SETTINGS                              "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" =======================================================================
+" Notes:
+" - If the system clipboard register is not available in terminal vim you can
+"   install gvim. This will make the system clipboard available in terminal vim.
+" - Using registers is a simple as {register} action.
+" - When opening the quickfix window you can suffix it with a number to show a
+"   certian number of lines. For example (:copen 1000)
+" - You can execute a command in each file in the quickfix list using (:cfdo)
+" =======================================================================
 
-" vim plug
+" =======================================================================
+" Vim Plug
+" =======================================================================
+
 call plug#begin('~/.vim/plugged')
-Plug 'editorconfig/editorconfig-vim'
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
-Plug 'freitass/todo.txt-vim'
+Plug 'honza/vim-snippets'
 Plug 'w0rp/ale'
-Plug 'dart-lang/dart-vim-plugin'
 call plug#end()
 
-" general
+" =======================================================================
+" General Configuration
+" =======================================================================
+
+let mapleader="\<Space>"
+
+set belloff=all
+set clipboard=unnamedplus
+set colorcolumn=80,120
 set exrc
 set hlsearch
+set laststatus=2
+set noswapfile
+set nowrap
+set number
+set relativenumber
+set shell=/bin/bash
+set tags+=tags;\\~
+set undolevels=1000
+
+" File encodings.
 set enc=utf-8
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf8,prc
-set belloff=all
-set colorcolumn=80,120
-set noswapfile
-set shell=/bin/bash
-set tags+=tags;\\~
-set undolevels=1000
-set nowrap
-set laststatus=2
-set number
-set relativenumber
+
+" Show whitespaces using the following characters.
 set list listchars=nbsp:¬,tab:»·,trail:·,extends:>
 
-" paths
-set path+=/home/vernon/Devenv/notes/**
-set path+=/home/vernon/.scripts/**
-
-" ignore some stuff
+" A file that matches with one of these patterns is ignored when expanding wildcards.
 set wildignore+=*.so,*.o,*.zip,*.pdf,*.png,*.jpg,*.jpeg
 set wildignore+=*/.git/*,*/node_modules/*,*/vendor/*
 
-" trim trailing spaces
+" trim trailing spaces on save.
 autocmd BufWritePre * :%s/\s\+$//e
 
-" leader
-let mapleader="\<Space>"
-
-" colorscheme
+" TODO: Maybe find something better.
+" Colorscheme.
 set t_Co=256
-colorscheme gruvbox
 set bg=dark
+colorscheme gruvbox
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                 ULTISNIPS                                  "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" =======================================================================
+" Plugin Settings
+" =======================================================================
 
+" Ultisnips.
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                    ALE                                     "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" Ale.
+let g:ale_list_window_size = 5
 let b:ale_linters = ['eslint', 'stylelint', 'phpcs', 'dart']
-
-" ignore minified files.
 let g:ale_pattern_options = {
 \ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
 \ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
 \}
 
-" Show 5 lines of errors.
-let g:ale_list_window_size = 5
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                    DART                                    "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" Dart.
 let g:dart_style_guide = 2
 let g:dart_format_on_save = 0
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                   TASKS                                    "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" holds the global tasks.
+" =======================================================================
+" Custom Tasks Feature
+" =======================================================================
+
+" Holds the global tasks.
 let g:GlobalTasks = {'NPM Install:': "!npm install"}
 
 fun GetNumberedDictKeys(taskDict)
@@ -112,42 +114,33 @@ endf
 
 nnoremap <leader>t :call RunGlobalTask()<CR>
 
+" =======================================================================
+" Bindings
+" =======================================================================
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"                                  HELPERS                                   "
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" update current buffer.
-nnoremap <C-S> :w<CR>
-
-" allows me to copy and past across multiple vim instances (Tmux).
-vmap <leader>y :w! /tmp/vitmp<CR>
-nmap <leader>p :r! cat /tmp/vitmp<CR>
-
-" workflow.
-nnoremap <leader>gs :Git<CR>
-nnoremap <leader>gp :Gpush<CR>
-nnoremap <leader>gP :Gpull<CR>
-nnoremap <leader>q :q<CR>
+" General.
 nnoremap <leader>f :find<space>
-nnoremap <leader>b :buffer<space>
 nnoremap <leader>d :find %:p:h<CR>
-nnoremap <leader>D :e.<CR>
+nnoremap <leader>b :buffer<space>
 nnoremap <leader>h :noh<CR>
-nnoremap <leader>i :r %:p:h<tab>
-nnoremap <leader>pt :tab term<CR>
-nnoremap <leader>r yiw:.,$s/<C-r>"//gc<left><left><left>
-vnoremap <leader>r y:.,$s/<C-r>"//gc<left><left><left>
-nnoremap <C-tab> :tabnext<CR>
 
-" vimgrep
+" Substitute.
+nnoremap <leader>r yiw:%s/<C-r>"/<C-r>"/gc<left><left><left>
+vnoremap <leader>r y:%s/<C-r>"/<C-r>"/gc<left><left><left>
+
+" Vimgrep.
 nnoremap <expr> <leader>s ':vimgrep "'. escape(input('Find: '), '"') .'" ' . getcwd() . '/**/*.' . expand("%:e")
 
-" terminal bindings.
+" Terminal bindings.
 tnoremap <C-tab> <C-\><C-n> :tabnext<CR>
 tnoremap <Esc> <C-\><C-n>
 
-" quick exit insert mode.
+" Quick exit insert mode.
 inoremap jj <Esc>
 inoremap hh <Esc>
 inoremap kk <Esc>
+
+" Fugitive.
+nnoremap <leader>gs :Git<CR>
+nnoremap <leader>gp :Gpush<CR>
+nnoremap <leader>gP :Gpull<CR>
