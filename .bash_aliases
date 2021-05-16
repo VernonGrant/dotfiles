@@ -206,12 +206,9 @@ function changeDockerContainerWordPressURL() {
 # $4, the mysql database name.
 function getRemoteDatabase() {
 	# dump database on server.
-	ssh $1 "mkdir -p ~/temp"
-	ssh $1 "mysqldump --user=\"$2\" --password=\"$3\" $4 > ~/temp/$4.sql"
-	ssh $1 "ls -la ~/temp/"
+	ssh $1 "mkdir -p ~/temp && mysqldump --user=\"$2\" --password=\"$3\" $4 > ~/temp/$4.sql && ls -la ~/temp/"
 
 	# rsync it down.
-	rm -f ./$4.sql
 	rsync -a --delete $1:~/temp/$4.sql ./
 }
 
