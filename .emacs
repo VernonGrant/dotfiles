@@ -15,6 +15,7 @@
 ;; M-- M-^         | join following line
 ;; M-<             | go to start of file
 ;; M->             | go to end of file
+;; C-x O           | go back to previous window, split. (Capital O not zero).
 ;; C-x i           | insert a file into the current file
 ;; C-x h           | highlight entire buffer
 ;; C-x h, C-M \    | reindent entire buffer
@@ -185,6 +186,9 @@
 ;; delete reqions
 (delete-selection-mode 1)
 
+;; show line numbers
+(global-display-line-numbers-mode)
+
 ;; IMPORTANT, helps increase the nextline performace by 10x
 (setq auto-window-vscroll nil)
 
@@ -217,6 +221,14 @@
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100)
 
+;; grep, rgrep config
+(eval-after-load 'grep
+  '(progn
+     (add-to-list 'grep-find-ignored-directories "node_modules")
+     (add-to-list 'grep-find-ignored-directories "vendor")
+     (add-to-list 'grep-find-ignored-directories ".bundle")))
+(add-hook 'grep-mode-hook (lambda () (toggle-truncate-lines 1)))
+
 ;; -------------------------------------
 ;; Packages Configuration
 ;; -------------------------------------
@@ -225,12 +237,6 @@
 (eval-when-compile
   (require 'use-package))
 
-;; makes sure the path matches the system path, very important.
-(use-package exec-path-from-shell
-  :ensure t
-  :init
-  (exec-path-from-shell-initialize))
-
 (use-package editorconfig
   :ensure t
   :config
@@ -238,7 +244,21 @@
 
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
+  :init
+  (global-flycheck-mode)
+  (setq flycheck-php-phpcs-executable "/home/vernon/.config/composer/vendor/bin/phpcs")
+  (setq flycheck-phpcs-standard "WordPress")
+
+  ;; determine how the flycheck error list should be show.
+  (add-to-list 'display-buffer-alist
+	       `(,(rx bos "*Flycheck errors*" eos)
+		 (display-buffer-reuse-window
+		  display-buffer-in-side-window)
+		 (side            . bottom)
+		 (reusable-frames . visible)
+		 (window-height   . 0.20)))
+  :bind ("<f5>" . flycheck-list-errors-toggle)
+  )
 
 (use-package magit
   :ensure t
@@ -337,6 +357,14 @@ With negative N, comment out original line and use the absolute value."
     (compile makefileCommand))
   )
 
+(defun flycheck-list-errors-toggle ()
+  "Toggle the error list for the current buffer."
+  (interactive)
+  (let ((flycheck-errors-window (get-buffer-window flycheck-error-list-buffer)))
+    (if (not (window-live-p flycheck-errors-window))
+        (call-interactively 'flycheck-list-errors)
+      (delete-window flycheck-errors-window))))
+
 ;; -------------------------------------
 ;; Xah Functions
 ;; -------------------------------------
@@ -421,6 +449,9 @@ Version 2019-02-26"
 
 ;; quick open recent files
 (global-set-key (kbd "C-c r") 'recentf-open-files)
+
+;; search inside files.
+(global-set-key (kbd "C-c s") 'rgrep)
 
 ;; editing
 (global-set-key (kbd "M-s M-s") 'sort-lines)
