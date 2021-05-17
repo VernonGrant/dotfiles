@@ -20,5 +20,8 @@
 # vim
 !.vimrc
 
+# emacs
+!.emacs
+
 # ctags
 !.ctags

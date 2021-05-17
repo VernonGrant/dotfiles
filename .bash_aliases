@@ -26,6 +26,10 @@ sudo apt-get update
 sudo apt-get dist-upgrade
 '
 
+alias today='
+watch -n 1 cat ~/Devenv/notes/today.md
+'
+
 # General
 alias c='clear'
 
