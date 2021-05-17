@@ -139,6 +139,9 @@
                      exec-path-from-shell
                      use-package
 
+		     ;; theme.
+		     zenburn-theme
+
                      ;; modes.
                      dart-mode
                      json-mode
@@ -307,6 +310,42 @@
 ;;   (rg-enable-default-bindings)
 ;;   :bind
 ;;   ("C-c s" . rg))
+
+;; -------------------------------------
+;; IDO CONFIG
+;; -------------------------------------
+
+(ido-mode t)
+(ido-everywhere)
+
+(setq ido-enable-prefix nil
+      ido-enable-flex-matching t                ;; show any name that has the chars you typed
+      ido-case-fold t                           ;; ignore upper or lower case searches
+      ido-auto-merge-work-directories-length -1 ;; after how many characters before looking in other folders.
+      ;; ido-create-new-buffer 'always
+      ido-use-filename-at-point nil
+      ido-max-prospects 10
+      ido-default-file-method 'selected-window   ;; use current pane for newly opened file
+      ido-default-buffer-method 'selected-window ;; use current pane for newly switched buffer
+      )
+
+(progn
+  (make-local-variable 'ido-decorations)
+  (setf (nth 2 ido-decorations) "\n"))
+
+;; stop ido from suggesting when naming new file.
+(define-key (cdr ido-minor-mode-map-entry) [remap write-file] nil)
+
+;; make m-x use ido.
+(global-set-key
+ "\M-x"
+ (lambda ()
+   (interactive)
+   (call-interactively
+    (intern
+     (ido-completing-read "M-x " (all-completions "" obarray 'commandp))))
+   )
+ )
 
 ;; -------------------------------------
 ;; Custom functions
@@ -491,12 +530,13 @@ Version 2019-02-26"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(custom-enabled-themes (quote (wombat)))
+ '(custom-enabled-themes (quote (zenburn)))
+ '(custom-safe-themes
+   (quote
+    ("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default)))
  '(package-selected-packages
    (quote
-    (flycheck highlight-indent-guides company php-mode emmet-mode web-mode editorconfig magit yaml-mode pip-requirements markdown-mode js2-mode jinja2-mode gitignore-mode json-mode dart-mode use-package exec-path-from-shell))))
+    (zenburn-theme yaml-mode web-mode use-package pip-requirements php-mode monokai-theme markdown-mode magit json-mode js2-mode jinja2-mode highlight-indent-guides gitignore-mode flycheck exec-path-from-shell emmet-mode editorconfig dart-mode company))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
