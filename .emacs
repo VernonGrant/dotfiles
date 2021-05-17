@@ -100,7 +100,7 @@
 ;; m         | bring up settngs menu
 
 ;; -------------------------------------
-;; TOOL DEPENDENCIES
+;; Tool Dependencies
 ;; -------------------------------------
 ;;
 ;; - ripgrep  | used by rg.el
@@ -108,7 +108,7 @@
 ;; - basictex | For org not exportasion to PDF
 
 ;; -------------------------------------
-;; TODO
+;; Todo
 ;; -------------------------------------
 ;;
 ;; Implement some sort of linting in emacs.
@@ -116,7 +116,7 @@
 ;; Sometimes Yas does not load snippets... why?
 
 ;; -------------------------------------
-;; MELPA
+;; Melpa
 ;; -------------------------------------
 
 (require 'package)
@@ -160,7 +160,7 @@
     (package-install package)))
 
 ;; -------------------------------------
-;; GENERAL CONFIGURATION
+;; General Configuration
 ;; -------------------------------------
 
 ;; disable bell
@@ -205,20 +205,20 @@
 (setq bookmark-default-file "~/.emacs-bookmarks")
 
 ;; minibuffer settings
-;; (setq resize-mini-windows t)
-;; (setq max-mini-window-height 0.5)
+(setq resize-mini-windows t)
+(setq max-mini-window-height 0.5)
 
 ;; dynamic abbreviation (buffer completions)
 ;; auto completion
-;; (setq dabbrev-check-all-buffers t)
+(setq dabbrev-check-all-buffers t)
 
-;; enable dynamic completion mode.
-;; (recentf-mode 1)
-;; (setq recentf-max-menu-items 100)
-;; (setq recentf-max-saved-items 100)
+;; enable recentf, to open recent files.
+(recentf-mode 1)
+(setq recentf-max-menu-items 100)
+(setq recentf-max-saved-items 100)
 
 ;; -------------------------------------
-;; PACKAGES CONFIGURATION
+;; Packages Configuration
 ;; -------------------------------------
 
 ;; this is only needed once, near the top of the file
@@ -264,6 +264,12 @@
   :init
   (add-hook 'after-init-hook 'global-company-mode))
 
+(use-package highlight-indent-guides
+  :ensure t
+  :init
+  (setq highlight-indent-guides-method 'column)
+  :config
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 
 ;; (use-package command-log-mode
 ;;   :ensure t)
@@ -278,52 +284,8 @@
 ;;   :bind
 ;;   ("C-c s" . rg))
 
-;; (use-package yasnippet
-;;   :ensure t
-;;   :init
-;;   (yas-global-mode 1)
-;;   :config
-;;   (setq yas-snippet-dirs '("~/emacs-snippets"))
-;;   :bind
-;;   ("C-c y v" . yas-visit-snippet-file)
-;;   ("C-c y r" . yas-reload-all)
-;;   ("C-c y d" . yas-describe-tables))
-
-(use-package highlight-indent-guides
-  :ensure t
-  :init
-  (setq highlight-indent-guides-method 'column)
-  :config
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
-
 ;; -------------------------------------
-;; IVY, SWIPER, COUNSEL CONFIG
-;; -------------------------------------
-
-(ido-mode t)
-(ido-everywhere)
-(setq ido-enable-prefix nil
-      ido-enable-flex-matching t ;; all of the entered characters in the specified sequence will match.
-      ido-case-fold t ;; ignore upper or lower case searches
-      ido-auto-merge-work-directories-length -1 ;; after how many characters before looking in other folders.
-      ido-create-new-buffer 'always
-      ido-use-filename-at-point nil
-      ido-max-prospects 10
-      ido-max-prospects 30
-      )
-
-(global-set-key
- "\M-x"
- (lambda ()
-   (interactive)
-   (call-interactively
-    (intern
-     (ido-completing-read "M-x " (all-completions "" obarray 'commandp))))
-   )
- )
-
-;; -------------------------------------
-;; CUSTOM FUNCTIONS
+;; Custom functions
 ;; -------------------------------------
 
 ;; TODO: When duplicating a region add a blank space at the end.
@@ -413,11 +375,11 @@ Version 2019-02-26"
   (let (($this-bookmark
          (ido-completing-read "Open bookmark:" (mapcar (lambda ($x) (car $x)) bookmark-alist))))
     (find-file (bookmark-get-filename $this-bookmark))
-    ;; (bookmark-jump $this-bookmark)
+    (bookmark-jump $this-bookmark)
     ))
 
 ;; -------------------------------------
-;; CONVINCE THE EDITING OF MY EMACS CONFIG
+;; Convince the editing of my emacs config
 ;; -------------------------------------
 
 (defun open-emacs-init-file()
@@ -435,7 +397,7 @@ Version 2019-02-26"
 (add-hook 'after-save-hook 'automatically-eval-init-file)
 
 ;; -------------------------------------
-;; KEYMAPS
+;; Keymaps
 ;; -------------------------------------
 ;; Keymaps: https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
 
@@ -454,7 +416,7 @@ Version 2019-02-26"
 (global-set-key (kbd "M-<up>") 'enlarge-window)
 
 ;; quick open recent files
-;; (global-set-key (kbd "C-c r") 'recentf-open-files)
+(global-set-key (kbd "C-c r") 'recentf-open-files)
 
 ;; editing
 (global-set-key (kbd "M-s M-s") 'sort-lines)
