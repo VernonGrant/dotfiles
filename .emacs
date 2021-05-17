@@ -225,15 +225,25 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package magit
+;; makes sure the path matches the system path, very important.
+(use-package exec-path-from-shell
   :ensure t
-  :bind ("C-c g" . magit-status)
-  )
+  :init
+  (exec-path-from-shell-initialize))
 
 (use-package editorconfig
   :ensure t
   :config
   (editorconfig-mode +1))
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package magit
+  :ensure t
+  :bind ("C-c g" . magit-status)
+  )
 
 (use-package web-mode
   :ensure t
@@ -252,12 +262,6 @@
   :hook
   (html-mode . emmet-mode)
   (web-mode . emmet-mode))
-
-;; makes sure the path matches the system path, very important.
-(use-package exec-path-from-shell
-  :ensure t
-  :init
-  (exec-path-from-shell-initialize))
 
 (use-package company
   :ensure t
@@ -390,7 +394,7 @@ Version 2019-02-26"
 (global-set-key (kbd "C-c e") 'open-emacs-init-file)
 
 (defun automatically-eval-init-file()
-  "Automatically load the emacs init file after changes."
+  "Automatically load the EMACS init file after change."
   (when (equal user-init-file buffer-file-name)
     (load user-init-file))
   )
@@ -461,7 +465,7 @@ Version 2019-02-26"
  '(custom-enabled-themes (quote (wombat)))
  '(package-selected-packages
    (quote
-    (highlight-indent-guides company php-mode emmet-mode web-mode editorconfig magit yaml-mode pip-requirements markdown-mode js2-mode jinja2-mode gitignore-mode json-mode dart-mode use-package exec-path-from-shell))))
+    (flycheck highlight-indent-guides company php-mode emmet-mode web-mode editorconfig magit yaml-mode pip-requirements markdown-mode js2-mode jinja2-mode gitignore-mode json-mode dart-mode use-package exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
