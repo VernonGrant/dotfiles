@@ -2,6 +2,7 @@
 ;;
 ;; C-h m           | find help regarding a mode.
 ;; C-h f           | find help regarding a function.
+;; C-k             | delete rest of line, or line if empty.
 ;; C-/             | undo
 ;; C-/             | redo
 ;; C-y             | yank from kill ring.
@@ -128,6 +129,8 @@
 ;; Sometimes Yas does not load snippets... why?
 ;;
 ;; Learn more about the kill ring.
+;;
+;; Check if ido can look into sub folders.
 
 ;; -------------------------------------
 ;; Melpa
