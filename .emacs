@@ -4,17 +4,32 @@
 ;; C-h f           | find help regarding a function.
 ;; C-/             | undo
 ;; C-/             | redo
+;; C-y             | yank from kill ring.
+;; M-y             | yank down the kill ring.
+;; M-%             | query replace.
+;; C-s             | incremental search.
+;; C-s C-s         | repeat incremental search.
+;; C-r             | incremental search backward.
+;; C-r C-r         | repeat incremental search backward.
+;; C-s C-y         | start incremental search using yanked text.
+;; C-s M-y         | start incremental search from kill ring string.
 ;; C-x s           | save all buffers.
 ;; C-x c-s         | save current buffer.
+;; C-x c-w         | write the current buffer, possible to pick the name of .
 ;; C-o             | add blank line below
 ;; C-x C-o         | delete all blank lines below
+;; C-x c-c         | quite emacs.
 ;; M--             | prefix to perform negative commands for example M-- M-u
 ;; C--             | prefix to perform negative commands
 ;; M-m             | to true biggining of line
+;; M-v             | page up.
+;; C-v             | page down.
 ;; M-^             | join previous line
 ;; M-- M-^         | join following line
 ;; M-<             | go to start of file
 ;; M->             | go to end of file
+;; C-x C-f         | find file.
+;; C-x C-v         | find alternative file.
 ;; C-x O           | go back to previous window, split. (Capital O not zero).
 ;; C-x i           | insert a file into the current file
 ;; C-x h           | highlight entire buffer
@@ -26,30 +41,30 @@
 ;; C-x r SPC       | point-to-register
 ;; C-x r j         | jump-to-register
 
-;; dired  --------------------------------------------
+;; dired  ------------------------------------------------
 ;;
 ;; C-o         | preview file but stay in dired buffer
 ;;             | find-name-dired, searches for file
 
-;; tags ----------------------------------------------
+;; tags -------------------------------------------------
 ;;
 ;; M-.         | visit tag at point
 ;; M-,         | jump back
 ;; C-x 4 .     | visit tag in new split
 ;; C-x 5 .     | visit tag in new frame
 
-;; isearch -------------------------------------------
+;; isearch ---------------------------------------------
 ;;
 ;; M-s o       | occur that shows the last search string.
 ;; M-s e       | to edit the search string in the minibuffer.
 ;; M-s h r     | highlights the last search string.
 
-;; occur  --------------------------------------------
+;; occur  ----------------------------------------------
 ;;
 ;; e           | directly edit the entry in place.
 ;; C-c C-c     | return back to occur mode after edit.
 
-;; org  -------------------------------------------
+;; org  -----------------------------------------------
 ;;
 ;; S-M-RET     | insert a new todo entry below the current one
 ;; C-c / t     | view todo items in a sparse tree
@@ -72,7 +87,7 @@
 ;; h            | describe-mode
 ;; q            | quit-window
 
-;; bookmarks  --------------------------------------
+;; bookmarks  ----------------------------------------
 ;;
 ;; C-x r m  | create / set bookmark
 ;; C-x r b  | open bookmark
@@ -82,7 +97,7 @@
 ;;            r | rename current item's title
 ;;            s | save the change
 
-;; ispell  --------------------------------------
+;; ispell  --------------------------------------------
 ;;
 ;; M $                | Check and correct spelling of the word at point (ispell-word). If the region is active, do it for all words in the region instead.
 ;; C-M i              | Complete the word before point based on the spelling dictionary (ispell-complete-word).
@@ -90,31 +105,29 @@
 ;; flyspell-prog-mode | Enable Fly-spell mode for comments and strings only.
 ;; flyspell-buffer    | Check and correct spelling in the buffer.
 
-;; emmet ---------------------------------------------
+;; emmet ----------------------------------------------
 ;;
 ;; C-j         | expand emmet
 
-;; rg  --------------------------------------
+;; rg  ------------------------------------------------
 ;;
 ;; C-c s     | start a new rg (ripgrep) search
 ;; e         | directly edit search results
 ;; m         | bring up settngs menu
 
-;; -------------------------------------
-;; Tool Dependencies
-;; -------------------------------------
+;; dependencies  --------------------------------------
 ;;
 ;; - ripgrep  | used by rg.el
 ;; - ispell   | helps mark misspelled words
 ;; - basictex | For org not exportasion to PDF
 
-;; -------------------------------------
-;; Todo
-;; -------------------------------------
+;; todo  ---------------------------------------------
 ;;
 ;; Implement some sort of linting in emacs.
 ;; Work on more productive Yasnippets.
 ;; Sometimes Yas does not load snippets... why?
+;;
+;; Learn more about the kill ring.
 
 ;; -------------------------------------
 ;; Melpa
