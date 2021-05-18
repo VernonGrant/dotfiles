@@ -130,7 +130,8 @@
 ;;
 ;; Learn more about the kill ring.
 ;;
-;; Check if ido can look into sub folders.
+;; TODO: Check if ido can look into sub folders.
+;; TODO: Check if flycheck can work with web-mode for php.
 
 ;; -------------------------------------
 ;; Melpa
@@ -256,11 +257,6 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode +1))
-
 (use-package flycheck
   :ensure t
   :init
@@ -276,17 +272,23 @@
 		 (side            . bottom)
 		 (reusable-frames . visible)
 		 (window-height   . 0.20)))
-  :bind ("<f5>" . flycheck-list-errors-toggle)
-  )
+
+  ;; add web-mode linters.
+  (with-eval-after-load 'flycheck
+    (flycheck-add-mode 'php-phpcs 'web-mode)
+    (flycheck-add-mode 'html-tidy 'web-mode)
+    (flycheck-add-mode 'css-csslint 'web-mode))
+
+  :bind ("<f5>" . flycheck-list-errors-toggle))
 
 (use-package magit
   :ensure t
-  :bind ("C-c g" . magit-status)
-  )
+  :bind ("C-c g" . magit-status))
 
 (use-package web-mode
   :ensure t
   :init
+  (setq web-mode-block-padding 0)
   (setq web-mode-markup-indent-offset 2)
   :config
   (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
@@ -295,6 +297,15 @@
   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode)))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode +1))
+
+;; this solved the conflict with php, web-mode.
+(add-hook 'editorconfig-custom-hooks
+	  (lambda (hash) (setq web-mode-block-padding 0)))
 
 (use-package emmet-mode
   :ensure t
@@ -314,19 +325,6 @@
   :config
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
 
-;; (use-package command-log-mode
-;;   :ensure t)
-
-;; (use-package wgrep
-;;   :ensure t)
-
-;; (use-package rg
-;;   :ensure t
-;;   :init
-;;   (rg-enable-default-bindings)
-;;   :bind
-;;   ("C-c s" . rg))
-
 ;; -------------------------------------
 ;; IDO CONFIG
 ;; -------------------------------------
@@ -338,13 +336,14 @@
       ido-enable-flex-matching t                ;; show any name that has the chars you typed
       ido-case-fold t                           ;; ignore upper or lower case searches
       ido-auto-merge-work-directories-length -1 ;; after how many characters before looking in other folders.
-      ;; ido-create-new-buffer 'always
       ido-use-filename-at-point nil
       ido-max-prospects 10
       ido-default-file-method 'selected-window   ;; use current pane for newly opened file
       ido-default-buffer-method 'selected-window ;; use current pane for newly switched buffer
+      ;; ido-create-new-buffer 'always
       )
 
+;; make ido display vertically.
 (progn
   (make-local-variable 'ido-decorations)
   (setf (nth 2 ido-decorations) "\n"))
@@ -491,31 +490,26 @@ Version 2019-02-26"
 ;; remove most retarded key binding of all time.
 (global-unset-key (kbd "C-z"))
 
-;; TODO: This needs to be handled better.
-;; make sure dired jump is set, should be by default but sometimes
-;; stops working.
-(global-set-key (kbd "C-x C-j") #'dired-jump)
-
 ;; window sizing.
 (global-set-key (kbd "M-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
 
-;; quick open recent files
+;; quick open recent files.
 (global-set-key (kbd "C-c r") 'recentf-open-files)
 
 ;; search inside files.
 (global-set-key (kbd "C-c s") 'rgrep)
 
-;; editing
+;; editing.
 (global-set-key (kbd "M-s M-s") 'sort-lines)
 
-;; file navigation
+;; file navigation.
 (global-set-key (kbd "C-x ,") 'previous-buffer)
 (global-set-key (kbd "C-x .") 'next-buffer)
 
-;; custom function bindings
+;; custom function bindings.
 (global-set-key (kbd "C-x r b") 'xah-bookmark-open-file-fast)
 (global-set-key (kbd "C-c d") 'vg-duplicate-line-or-region)
 (global-set-key (kbd "C-c m") 'vg-make-target-command)
@@ -524,7 +518,11 @@ Version 2019-02-26"
 (global-set-key (kbd "M-p") 'xah-cursor-backward-block)
 (global-set-key (kbd "M-n") 'xah-cursor-forward-block)
 
-;; disable arrow keys completely
+;; dired jump, require is needed to load it from the start.
+(require 'dired-x)
+(global-set-key (kbd "C-x j") #'dired-jump)
+
+;; disable arrow keys completely.
 (global-unset-key (kbd "<left>"))
 (global-unset-key (kbd "<right>"))
 (global-unset-key (kbd "<up>"))
