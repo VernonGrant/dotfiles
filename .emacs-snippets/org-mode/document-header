@@ -1,10 +1,10 @@
 # -*- mode: snippet -*-
 # contributor: Vernon Grant <vernon@ruppell.io>
-# name: Document Header Personal
+# name: Document Header
 # key: header
 # --
 
 #+title: ${Document Title}
-#+date: ${`(current-time-string)`}
+#+date: ${`(format-time-string "%Y-%m-%d")`}
 #+email: vernon@ruppell.io
 #+author: Vernon Grant
