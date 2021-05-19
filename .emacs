@@ -8,6 +8,7 @@
 ;; C-y             | yank from kill ring.
 ;; M-y             | yank down the kill ring.
 ;; M-%             | query replace.
+;; M-/             | word completion.
 ;; C-s             | incremental search.
 ;; C-s C-s         | repeat incremental search.
 ;; C-r             | incremental search backward.
@@ -88,6 +89,11 @@
 ;; h            | describe-mode
 ;; q            | quit-window
 
+;; ido  ------------------------------------------
+;;
+;; M-f            | wide find file. Search into sub directory.
+;; ?              | see a full list of all matching buffers.
+
 ;; bookmarks  ----------------------------------------
 ;;
 ;; C-x r m  | create / set bookmark
@@ -127,11 +133,11 @@
 ;; Implement some sort of linting in emacs.
 ;; Work on more productive Yasnippets.
 ;; Sometimes Yas does not load snippets... why?
-;;
 ;; Learn more about the kill ring.
 ;;
 ;; TODO: Check if ido can look into sub folders.
 ;; TODO: Check if flycheck can work with web-mode for php.
+;; TODO: check how to redo things.
 
 ;; -------------------------------------
 ;; Melpa
