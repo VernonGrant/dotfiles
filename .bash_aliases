@@ -30,6 +30,21 @@ alias today='
 watch -n 1 cat ~/Devenv/notes/today.md
 '
 
+alias block-social='
+sudo echo "" >> /etc/hosts
+echo "0.0.0.0 facebook.com" >> /etc/hosts
+echo "0.0.0.0 www.facebook.com" >> /etc/hosts
+echo "0.0.0.0 youtube.com" >> /etc/hosts
+echo "0.0.0.0 www.youtube.com" >> /etc/hosts
+echo "0.0.0.0 reddit.com" >> /etc/hosts
+echo "0.0.0.0 www.reddit.com" >> /etc/hosts
+echo "0.0.0.0 twitter.com" >> /etc/hosts
+echo "0.0.0.0 www.twitter.com" >> /etc/hosts
+echo "0.0.0.0 instagram.com" >> /etc/hosts
+echo "0.0.0.0 www.instagram.com" >> /etc/hosts
+cat /etc/hosts
+'
+
 # General
 alias c='clear'
 
