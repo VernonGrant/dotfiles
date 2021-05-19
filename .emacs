@@ -247,6 +247,11 @@
 (setq recentf-max-menu-items 100)
 (setq recentf-max-saved-items 100)
 
+;; org mode
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)))
+
 ;; grep, rgrep config
 (eval-after-load 'grep
   '(progn
@@ -316,6 +321,10 @@
   :config
   (editorconfig-mode +1))
 
+(use-package zeal-at-point
+  :ensure t
+  :bind ("<f9>" . zeal-at-point))
+
 ;; this solved the conflict with php, web-mode.
 (add-hook 'editorconfig-custom-hooks
 	  (lambda (hash) (setq web-mode-block-padding 0)))
@@ -326,19 +335,12 @@
   (html-mode . emmet-mode)
   (web-mode . emmet-mode))
 
-
 (use-package company
   :ensure t
   :init
   (global-company-mode))
 
-(use-package highlight-indent-guides
-  :ensure t
-  :init
-  (setq highlight-indent-guides-method 'column)
-  :config
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
-
+;; tutorial related.
 (defun vg-presentation-setup ()
   (text-scale-increase 5))
 
@@ -358,6 +360,11 @@
   :bind
   ("<f8>" . org-tree-slide-mode))
 
+(use-package company
+  :ensure t
+  :init
+  (global-company-mode))
+
 ;; -------------------------------------
 ;; IDO CONFIG
 ;; -------------------------------------
@@ -365,6 +372,7 @@
 (ido-mode t)
 (ido-everywhere)
 
+;; set the min height.
 (setq ido-enable-prefix nil
       ido-enable-flex-matching t                ;; show any name that has the chars you typed
       ido-case-fold t                           ;; ignore upper or lower case searches
@@ -376,10 +384,16 @@
       ;; ido-create-new-buffer 'always
       )
 
+(setq ido-decorations (quote ("\n-> " "" "\n " "\n ..." "[" "]" "
+  [No match]" " [Matched]" " [Not readable]" " [Too big]" "
+  [Confirm]")))
+;; (defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
+;; (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
+
 ;; make ido display vertically.
-(progn
-  (make-local-variable 'ido-decorations)
-  (setf (nth 2 ido-decorations) "\n"))
+;; (progn
+;;   (make-local-variable 'ido-decorations)
+;;   (setf (nth 2 ido-decorations) "\n"))
 
 ;; stop ido from suggesting when naming new file.
 (define-key (cdr ido-minor-mode-map-entry) [remap write-file] nil)
@@ -587,7 +601,7 @@ Version 2019-02-26"
     ("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default)))
  '(package-selected-packages
    (quote
-    (yasnippets yas-snippets org-tree-slide zenburn-theme yaml-mode web-mode use-package pip-requirements php-mode monokai-theme markdown-mode magit json-mode js2-mode jinja2-mode highlight-indent-guides gitignore-mode flycheck exec-path-from-shell emmet-mode editorconfig dart-mode company))))
+    (zeal-at-point yasnippets yas-snippets org-tree-slide zenburn-theme yaml-mode web-mode use-package pip-requirements php-mode monokai-theme markdown-mode magit json-mode js2-mode jinja2-mode highlight-indent-guides gitignore-mode flycheck exec-path-from-shell emmet-mode editorconfig dart-mode company))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
