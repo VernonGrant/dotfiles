@@ -304,6 +304,13 @@
   (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode)))
 
+(use-package yasnippet
+  :ensure t
+  :init
+  (setq yas-snippet-dirs
+	'("~/.emacs-snippets"))
+  (yas-global-mode 1))
+
 (use-package editorconfig
   :ensure t
   :config
@@ -319,10 +326,11 @@
   (html-mode . emmet-mode)
   (web-mode . emmet-mode))
 
+
 (use-package company
   :ensure t
   :init
-  (add-hook 'after-init-hook 'global-company-mode))
+  (global-company-mode))
 
 (use-package highlight-indent-guides
   :ensure t
@@ -330,6 +338,25 @@
   (setq highlight-indent-guides-method 'column)
   :config
   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode))
+
+(defun vg-presentation-setup ()
+  (text-scale-increase 5))
+
+(defun vg-presentation-end ()
+  (text-scale-increase 0))
+
+(use-package org-tree-slide
+  :hook ((org-tree-slide-play . vg-presentation-setup)
+	 (org-tree-slide-stop . vg-presentation-end))
+  :custom
+  (org-tree-slide-slide-in-effect t)
+  (org-tree-slide-activate-message "Presentation started!")
+  (org-tree-slide-deactivate-message "Presentation finished!")
+  (org-tree-slide-header t)
+  (org-tree-slide-breadcrumbs " > ")
+  (org-image-actual-width nil)
+  :bind
+  ("<f8>" . org-tree-slide-mode))
 
 ;; -------------------------------------
 ;; IDO CONFIG
@@ -508,6 +535,10 @@ Version 2019-02-26"
 ;; search inside files.
 (global-set-key (kbd "C-c s") 'rgrep)
 
+;; increase and decrease text scale.
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C-_") 'text-scale-decrease)
+
 ;; editing.
 (global-set-key (kbd "M-s M-s") 'sort-lines)
 
@@ -556,7 +587,7 @@ Version 2019-02-26"
     ("e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default)))
  '(package-selected-packages
    (quote
-    (zenburn-theme yaml-mode web-mode use-package pip-requirements php-mode monokai-theme markdown-mode magit json-mode js2-mode jinja2-mode highlight-indent-guides gitignore-mode flycheck exec-path-from-shell emmet-mode editorconfig dart-mode company))))
+    (yasnippets yas-snippets org-tree-slide zenburn-theme yaml-mode web-mode use-package pip-requirements php-mode monokai-theme markdown-mode magit json-mode js2-mode jinja2-mode highlight-indent-guides gitignore-mode flycheck exec-path-from-shell emmet-mode editorconfig dart-mode company))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
