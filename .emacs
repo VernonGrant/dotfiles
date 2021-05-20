@@ -566,15 +566,15 @@ Version 2019-02-26"
 (global-set-key (kbd "C-_") 'text-scale-decrease)
 
 ;; ctags
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C-_") 'text-scale-decrease)
+(global-set-key (kbd "<f7>") 'vg-ctags-create-tags)
+(global-set-key (kbd "<f8>") 'vg-ctags-add-tags)
 
 ;; editing.
 (global-set-key (kbd "M-s M-s") 'sort-lines)
 
 ;; file navigation.
-(global-set-key (kbd "<f7>") 'vg-ctags-create-tags)
-(global-set-key (kbd "<f8>") 'vg-ctags-add-tags)
+(global-set-key (kbd "C-x ,") 'previous-buffer)
+(global-set-key (kbd "C-x .") 'next-buffer)
 
 ;; custom function bindings.
 (global-set-key (kbd "C-x r b") 'xah-bookmark-open-file-fast)
