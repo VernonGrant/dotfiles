@@ -3,13 +3,14 @@
 ;; C-h m           | find help regarding a mode.
 ;; C-h f           | find help regarding a function.
 ;; C-k             | delete rest of line, or line if empty.
-;; C-/             | undo
-;; C-/             | redo
+;; C-/             | undo.
+;; C-g C-/         | redo.
 ;; C-y             | yank from kill ring.
 ;; M-y             | yank down the kill ring.
 ;; M-%             | query replace.
 ;; M-/             | word completion.
 ;; C-s             | incremental search.
+;; C-M-s           | regex search.
 ;; C-s C-s         | repeat incremental search.
 ;; C-r             | incremental search backward.
 ;; C-r C-r         | repeat incremental search backward.
@@ -17,11 +18,11 @@
 ;; C-s M-y         | start incremental search from kill ring string.
 ;; C-x s           | save all buffers.
 ;; C-x c-s         | save current buffer.
-;; C-x c-w         | write the current buffer, possible to pick the name of .
-;; C-o             | add blank line below
-;; C-x C-o         | delete all blank lines below
+;; C-x c-w         | write the current buffer, can provide new file name.
+;; C-o             | add blank line below.
+;; C-x C-o         | delete all blank lines below.
 ;; C-x c-c         | quite emacs.
-;; M--             | prefix to perform negative commands for example M-- M-u
+;; M--             | prefix to perform negative meta commands.
 ;; C--             | prefix to perform negative commands
 ;; M-m             | move cursor to the true biggining of the line.
 ;; C-x f           | set fill column number.
@@ -46,31 +47,71 @@
 ;; C-x r SPC       | point-to-register
 ;; C-x r j         | jump-to-register
 ;; g               | refresh page, worked on many UI pages.
+;; M-s o           | list lines using regex.
+;; M-s h r         | highlights regex expression.
 
-;; dired  ------------------------------------------------
-;;
-;; C-o         | preview file but stay in dired buffer
-;;             | find-name-dired, searches for file
-
-;; tags -------------------------------------------------
+;; Tags -------------------------------------------------
 ;;
 ;; M-.         | visit tag at point
-;; M-,         | jump back
+;; M-,         | jump back.
 ;; C-x 4 .     | visit tag in new split
 ;; C-x 5 .     | visit tag in new frame
 
-;; isearch ---------------------------------------------
+;; Isearch ---------------------------------------------
 ;;
-;; M-s o       | occur that shows the last search string.
+;; Use the following while in isearch.
+;;
+;; M-s o       | show all lines matching the search term in occur.
 ;; M-s e       | to edit the search string in the minibuffer.
 ;; M-s h r     | highlights the last search string.
 
-;; occur  ----------------------------------------------
+;; Occur  ----------------------------------------------
+;;
+;; Allows you to operate on lines.
 ;;
 ;; e           | directly edit the entry in place.
 ;; C-c C-c     | return back to occur mode after edit.
 
-;; org  -----------------------------------------------
+;; Dired  ------------------------------------------------
+;;
+;; C-o         | preview file but stay in dired buffer
+;;             | find-name-dired, searches for file
+
+;; Grep  ---------------------------------------------
+;;
+;; C-c C-K     | kill process
+;; C-c C-P     | enable wgrep
+
+;; Compile  ------------------------------------------
+;; ?            | describe-mode
+;; g            | recompile
+;; h            | describe-mode
+;; q            | quit-window
+
+;; IDO  ------------------------------------------
+;;
+;; M-f            | wide find file. Search into sub directory.
+;; ?              | see a full list of all matching buffers.
+
+;; Bookmarks  ----------------------------------------
+;;
+;; C-x r m  | create / set bookmark
+;; C-x r b  | open bookmark
+;; C-x r l  | list bookmarks:
+;;            d | to mark the current item for remove
+;;            x | to remove all D marked ones
+;;            r | rename current item's title
+;;            s | save the change
+
+;; Ispell  --------------------------------------------
+;;
+;; M $                | Check and correct spelling of the word at point (ispell-word). If the region is active, do it for all words in the region instead.
+;; C-M i              | Complete the word before point based on the spelling dictionary (ispell-complete-word).
+;; flyspell-mode      | Enable Fly-spell mode, which highlights all misspelled words.
+;; flyspell-prog-mode | Enable Fly-spell mode for comments and strings only.
+;; flyspell-buffer    | Check and correct spelling in the buffer.
+
+;; Org  -----------------------------------------------
 ;;
 ;; S-M-RET     | insert a new todo entry below the current one
 ;; C-c / t     | view todo items in a sparse tree
@@ -82,57 +123,23 @@
 ;; C-c .       | insert current date
 ;; C-c C-e     | open exporter
 
-;; grep  ---------------------------------------------
-;;
-;; C-c C-K     | kill process
-;; C-c C-P     | enable wgrep
-
-;; compile  ------------------------------------------
-;; ?            | describe-mode
-;; g            | recompile
-;; h            | describe-mode
-;; q            | quit-window
-
-;; ido  ------------------------------------------
-;;
-;; M-f            | wide find file. Search into sub directory.
-;; ?              | see a full list of all matching buffers.
-
-;; bookmarks  ----------------------------------------
-;;
-;; C-x r m  | create / set bookmark
-;; C-x r b  | open bookmark
-;; C-x r l  | list bookmarks:
-;;            d | to mark the current item for remove
-;;            x | to remove all D marked ones
-;;            r | rename current item's title
-;;            s | save the change
-
-;; ispell  --------------------------------------------
-;;
-;; M $                | Check and correct spelling of the word at point (ispell-word). If the region is active, do it for all words in the region instead.
-;; C-M i              | Complete the word before point based on the spelling dictionary (ispell-complete-word).
-;; flyspell-mode      | Enable Fly-spell mode, which highlights all misspelled words.
-;; flyspell-prog-mode | Enable Fly-spell mode for comments and strings only.
-;; flyspell-buffer    | Check and correct spelling in the buffer.
-
-;; emmet ----------------------------------------------
+;; Emmet ----------------------------------------------
 ;;
 ;; C-j         | expand emmet
 
-;; rg  ------------------------------------------------
+;; Rg  ------------------------------------------------
 ;;
 ;; C-c s     | start a new rg (ripgrep) search
 ;; e         | directly edit search results
 ;; m         | bring up settngs menu
 
-;; dependencies  --------------------------------------
+;; Dependencies  --------------------------------------
 ;;
 ;; - ripgrep  | used by rg.el
 ;; - ispell   | helps mark misspelled words
 ;; - basictex | For org not exportasion to PDF
 
-;; todo  ---------------------------------------------
+;; Todo  ---------------------------------------------
 ;;
 ;; Implement some sort of linting in emacs.
 ;; Work on more productive Yasnippets.
