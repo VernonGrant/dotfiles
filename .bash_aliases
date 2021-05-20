@@ -36,8 +36,6 @@ echo "0.0.0.0 facebook.com" >> /etc/hosts
 echo "0.0.0.0 www.facebook.com" >> /etc/hosts
 echo "0.0.0.0 youtube.com" >> /etc/hosts
 echo "0.0.0.0 www.youtube.com" >> /etc/hosts
-echo "0.0.0.0 reddit.com" >> /etc/hosts
-echo "0.0.0.0 www.reddit.com" >> /etc/hosts
 echo "0.0.0.0 twitter.com" >> /etc/hosts
 echo "0.0.0.0 www.twitter.com" >> /etc/hosts
 echo "0.0.0.0 instagram.com" >> /etc/hosts
