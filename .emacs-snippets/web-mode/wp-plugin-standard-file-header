@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: WordPress plugin standard file header.
+# key: wppsh
+# --
+
+/**
+ * ${Plugin Name}
+ *
+ * @author    ${Vernon Grant}
+ * @copyright ${`(format-time-string "%Y-%m-%d")`} ${Vernon Grant}
+ * @package   ${plugin-slug}
+ */

@@ -23,7 +23,9 @@
 ;; C-x c-c         | quite emacs.
 ;; M--             | prefix to perform negative commands for example M-- M-u
 ;; C--             | prefix to perform negative commands
-;; M-m             | to true biggining of line
+;; M-m             | move cursor to the true biggining of the line.
+;; C-x f           | set fill column number.
+;; M-q             | wrap/reformat to fill column.
 ;; M-v             | page up.
 ;; C-v             | page down.
 ;; M-^             | join previous line
@@ -32,6 +34,7 @@
 ;; M->             | go to end of file
 ;; C-x C-f         | find file.
 ;; C-x C-v         | find alternative file.
+;; C-x k           | kill current or named buffer.
 ;; C-x O           | go back to previous window, split. (Capital O not zero).
 ;; C-x i           | insert a file into the current file
 ;; C-x h           | highlight entire buffer
@@ -42,6 +45,7 @@
 ;; C-x 5 2         | open in new frame
 ;; C-x r SPC       | point-to-register
 ;; C-x r j         | jump-to-register
+;; g               | refresh page, worked on many UI pages.
 
 ;; dired  ------------------------------------------------
 ;;
@@ -138,6 +142,7 @@
 ;; TODO: Check if ido can look into sub folders.
 ;; TODO: Check if flycheck can work with web-mode for php.
 ;; TODO: check how to redo things.
+;; TODO: when doing a grep dont use multiple windows for previewing the results.
 
 ;; -------------------------------------
 ;; Melpa
@@ -358,7 +363,7 @@
   (org-tree-slide-breadcrumbs " > ")
   (org-image-actual-width nil)
   :bind
-  ("<f8>" . org-tree-slide-mode))
+  ("<f9>" . org-tree-slide-mode))
 
 (use-package company
   :ensure t
@@ -553,12 +558,16 @@ Version 2019-02-26"
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C-_") 'text-scale-decrease)
 
+;; ctags
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C-_") 'text-scale-decrease)
+
 ;; editing.
 (global-set-key (kbd "M-s M-s") 'sort-lines)
 
 ;; file navigation.
-(global-set-key (kbd "C-x ,") 'previous-buffer)
-(global-set-key (kbd "C-x .") 'next-buffer)
+(global-set-key (kbd "<f7>") 'vg-ctags-create-tags)
+(global-set-key (kbd "<f8>") 'vg-ctags-add-tags)
 
 ;; custom function bindings.
 (global-set-key (kbd "C-x r b") 'xah-bookmark-open-file-fast)

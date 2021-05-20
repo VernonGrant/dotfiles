@@ -123,8 +123,20 @@ function pdf-to-jpg() {
 	pdftoppm -jpeg $1 page
 }
 
+# Overlays a signed and stamped PDF ontop the provided PDF's last page.
 function pdf-mark-paid() {
-	qpdf $1 --overlay ~/.scripts/paid-marker.pdf -- $1-paid.pdf
+	filename="${1%.*}"
+	qpdf $1 --overlay ~/.scripts/paid-marker.pdf --to=z -- $filename-paid.pdf
+
+	gs \
+	-sOutputFile=$filename-paid-signed-grayed.pdf \
+	-sDEVICE=pdfwrite \
+	-sColorConversionStrategy=Gray \
+	-dProcessColorModel=/DeviceGray \
+	-dCompatibilityLevel=1.4 \
+	-dNOPAUSE \
+	-dBATCH \
+	$filename-paid-decrypt.pdf
 }
 
 #######################################################################
