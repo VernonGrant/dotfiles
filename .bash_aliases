@@ -43,6 +43,10 @@ echo "0.0.0.0 www.instagram.com" >> /etc/hosts
 cat /etc/hosts
 '
 
+alias empty-trash='
+rm -rf ~/.local/share/Trash/*
+'
+
 # General
 alias c='clear'
 
