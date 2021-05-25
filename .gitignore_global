@@ -8,6 +8,9 @@ Session.vim
 \#*\#
 .\#*
 
+# emacs
+.source-completions/
+
 # tags
 !TAGS/
 !tags/

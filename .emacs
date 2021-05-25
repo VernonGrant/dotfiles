@@ -1,4 +1,10 @@
-;; General -------------------------------------------
+;;; .emacs --- My personal emacs config file.
+;;; Commentary:
+
+;; This file contains some binding reminders and the minimal settings
+;; required for me to get my work done.
+
+;; General:
 ;;
 ;; C-h m           | find help regarding a mode.
 ;; C-h f           | find help regarding a function.
@@ -21,7 +27,7 @@
 ;; C-x c-w         | write the current buffer, can provide new file name.
 ;; C-o             | add blank line below.
 ;; C-x C-o         | delete all blank lines below.
-;; C-x c-c         | quite emacs.
+;; C-x c-c         | quite Emacs.
 ;; M--             | prefix to perform negative meta commands.
 ;; C--             | prefix to perform negative commands
 ;; M-m             | move cursor to the true biggining of the line.
@@ -36,7 +42,7 @@
 ;; C-x C-f         | find file.
 ;; C-x C-v         | find alternative file.
 ;; C-x k           | kill current or named buffer.
-;; C-x O           | go back to previous window, split. (Capital O not zero).
+;; C-x O           | go back to previous window, split.  (Capital O not zero).
 ;; C-x i           | insert a file into the current file
 ;; C-x h           | highlight entire buffer
 ;; C-x h, C-M \    | reindent entire buffer
@@ -50,50 +56,50 @@
 ;; M-s o           | list lines using regex.
 ;; M-s h r         | highlights regex expression.
 
-;; Tags -------------------------------------------------
+;; Tags:
 ;;
 ;; M-.         | visit tag at point
 ;; M-,         | jump back.
 ;; C-x 4 .     | visit tag in new split
 ;; C-x 5 .     | visit tag in new frame
 
-;; Isearch ---------------------------------------------
+;; Isearch:
 ;;
 ;; Use the following while in isearch.
 ;;
-;; M-s o       | show all lines matching the search term in occur.
-;; M-s e       | to edit the search string in the minibuffer.
-;; M-s h r     | highlights the last search string.
+;; M-s o        | show all lines matching the search term in occur.
+;; M-s e        | to edit the search string in the minibuffer.
+;; M-s h r      | highlights the last search string.
 
-;; Occur  ----------------------------------------------
+;; Occur:
 ;;
 ;; Allows you to operate on lines.
 ;;
-;; e           | directly edit the entry in place.
-;; C-c C-c     | return back to occur mode after edit.
+;; e            | directly edit the entry in place.
+;; C-c C-c      | return back to occur mode after edit.
 
-;; Dired  ------------------------------------------------
+;; Dired:
 ;;
-;; C-o         | preview file but stay in dired buffer
-;;             | find-name-dired, searches for file
+;; C-o          | preview file but stay in dired buffer
+;;              | find-name-dired, searches for file
 
-;; Grep  ---------------------------------------------
+;; Grep:
 ;;
-;; C-c C-K     | kill process
-;; C-c C-P     | enable wgrep
+;; C-c C-K      | kill process
+;; C-c C-P      | enable wgrep
 
-;; Compile  ------------------------------------------
+;; Compile:
 ;; ?            | describe-mode
 ;; g            | recompile
 ;; h            | describe-mode
 ;; q            | quit-window
 
-;; IDO  ------------------------------------------
+;; Ido:
 ;;
-;; M-f            | wide find file. Search into sub directory.
-;; ?              | see a full list of all matching buffers.
+;; M-f          | find file recursively.  Search into sub directory.
+;; ?            | see a full list of all matching buffers.
 
-;; Bookmarks  ----------------------------------------
+;; Bookmarks:
 ;;
 ;; C-x r m  | create / set bookmark
 ;; C-x r b  | open bookmark
@@ -103,15 +109,15 @@
 ;;            r | rename current item's title
 ;;            s | save the change
 
-;; Ispell  --------------------------------------------
+;; Ispell:
 ;;
-;; M $                | Check and correct spelling of the word at point (ispell-word). If the region is active, do it for all words in the region instead.
+;; M $                | Check and correct spelling of the word at point (ispell-word).  If the region is active, do it for all words in the region instead.
 ;; C-M i              | Complete the word before point based on the spelling dictionary (ispell-complete-word).
 ;; flyspell-mode      | Enable Fly-spell mode, which highlights all misspelled words.
 ;; flyspell-prog-mode | Enable Fly-spell mode for comments and strings only.
 ;; flyspell-buffer    | Check and correct spelling in the buffer.
 
-;; Org  -----------------------------------------------
+;; Org:
 ;;
 ;; S-M-RET     | insert a new todo entry below the current one
 ;; C-c / t     | view todo items in a sparse tree
@@ -123,67 +129,38 @@
 ;; C-c .       | insert current date
 ;; C-c C-e     | open exporter
 
-;; Emmet ----------------------------------------------
+;; Emmet:
 ;;
 ;; C-j         | expand emmet
 
-;; Rg  ------------------------------------------------
+;; Rg:
 ;;
 ;; C-c s     | start a new rg (ripgrep) search
 ;; e         | directly edit search results
 ;; m         | bring up settngs menu
 
-;; Dependencies  --------------------------------------
+;; Dependencies:
 ;;
 ;; - ripgrep  | used by rg.el
-;; - ispell   | helps mark misspelled words
+;; - Ispell   | helps mark misspelled words
 ;; - basictex | For org not exportasion to PDF
 
-;; Todo  ---------------------------------------------
-;;
-;; Implement some sort of linting in emacs.
-;; Work on more productive Yasnippets.
-;; Sometimes Yas does not load snippets... why?
-;; Learn more about the kill ring.
-;;
-;; TODO: Check if ido can look into sub folders.
-;; TODO: Check if flycheck can work with web-mode for php.
-;; TODO: check how to redo things.
-;; TODO: when doing a grep dont use multiple windows for previewing the results.
 
-;; -------------------------------------
-;; Melpa
-;; -------------------------------------
+
+;; Melpa:
 
 (require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; comment/uncomment these two lines to enable/disable melpa and melpa stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; for important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
 ;; packages.
 (setq package-list '(
-                     ;; core.
-                     exec-path-from-shell
-                     use-package
-
-		     ;; theme.
-		     monokai-theme
-
-                     ;; modes.
+		     use-package
                      dart-mode
                      json-mode
                      php-mode
                      gitignore-mode
                      jinja2-mode
-                     js2-mode
                      markdown-mode
                      pip-requirements
                      yaml-mode
@@ -198,59 +175,58 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-;; -------------------------------------
-;; General Configuration
-;; -------------------------------------
 
-;; disable bell
+
+;; Emacs Configuration:
+
+;; disable bell.
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 
-;; increate the undo limit
+;; increate the undo limit.
 (setq undo-limit 20000000)
 (setq undo-strong-limit 40000000)
 
-;; remove GUI menus and scrollbar
+;; remove GUI menus and scrollbar.
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 
-;; show matching parenthesis
+;; show matching parenthesis.
 (show-paren-mode 1)
 
-;; disable line wrapping
+;; disable line wrapping.
 (set-default 'truncate-lines -1)
 
-;; delete reqions
+;; delete reqions.
 (delete-selection-mode 1)
 
-;; show line numbers
+;; show line numbers.
 (global-display-line-numbers-mode)
 
-;; IMPORTANT, helps increase the nextline performace by 10x
+;; IMPORTANT, helps increase the nextline performace by 10x.
 (setq auto-window-vscroll nil)
 
-;; save backup files to specific folder
+;; save backup files to specific folder.
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-;; set the tramp mode. /ssh:Name:path
+;; set the tramp mode. /ssh:Name:path.
 (setq tramp-default-method "ssh")
 
-;; trim whitespaces on save
+;; trim whitespaces on save.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; toggle saving of minibuffer history (Savehist mode).
 (savehist-mode 1)
 
-;; automatically save bookmarks in custom file
+;; automatically save bookmarks in custom file.
 (setq bookmark-save-flag 1)
 (setq bookmark-default-file "~/.emacs-bookmarks")
 
-;; minibuffer settings
+;; minibuffer settings.
 (setq resize-mini-windows t)
 (setq max-mini-window-height 0.5)
 
-;; dynamic abbreviation (buffer completions)
 ;; auto completion
 (setq dabbrev-check-all-buffers t)
 
@@ -272,11 +248,10 @@
      (add-to-list 'grep-find-ignored-directories ".bundle")))
 (add-hook 'grep-mode-hook (lambda () (toggle-truncate-lines 1)))
 
-;; -------------------------------------
-;; Packages Configuration
-;; -------------------------------------
 
-;; this is only needed once, near the top of the file
+
+;; Packages:
+
 (eval-when-compile
   (require 'use-package))
 
@@ -333,10 +308,6 @@
   :config
   (editorconfig-mode +1))
 
-(use-package zeal-at-point
-  :ensure t
-  :bind ("<f9>" . zeal-at-point))
-
 ;; this solved the conflict with php, web-mode.
 (add-hook 'editorconfig-custom-hooks
 	  (lambda (hash) (setq web-mode-block-padding 0)))
@@ -352,60 +323,54 @@
   :init
   (global-company-mode))
 
-;; tutorial related.
-(defun vg-presentation-setup ()
-  (text-scale-increase 5))
 
-(defun vg-presentation-end ()
-  (text-scale-increase 0))
 
-(use-package org-tree-slide
-  :hook ((org-tree-slide-play . vg-presentation-setup)
-	 (org-tree-slide-stop . vg-presentation-end))
-  :custom
-  (org-tree-slide-slide-in-effect t)
-  (org-tree-slide-activate-message "Presentation started!")
-  (org-tree-slide-deactivate-message "Presentation finished!")
-  (org-tree-slide-header t)
-  (org-tree-slide-breadcrumbs " > ")
-  (org-image-actual-width nil)
-  :bind
-  ("<f9>" . org-tree-slide-mode))
+;; LSP Mode:
 
-(use-package company
+(use-package lsp-mode
+  ;; language servers:
+  ;; - php | sudo npm i intelephense -g
   :ensure t
+  :defer t
   :init
-  (global-company-mode))
+  ;; performance.
+  (setq gc-cons-threshold 500000000) ;; 500mb
+  (setq read-process-output-max (* 10240 10240)) ;; 10mb
+  (setq lsp-log-io nil) ;; turn off logs.
+  ;; lsp settings.
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((php-mode . lsp)
+         (js-mode . lsp)
+         (javascript-mode . lsp))
+  :commands lsp)
 
-;; -------------------------------------
-;; IDO CONFIG
-;; -------------------------------------
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+
+
+;; IDO Config:
 
 (ido-mode t)
 (ido-everywhere)
 
 ;; set the min height.
 (setq ido-enable-prefix nil
-      ido-enable-flex-matching t                ;; show any name that has the chars you typed
-      ido-case-fold t                           ;; ignore upper or lower case searches
-      ido-auto-merge-work-directories-length -1 ;; after how many characters before looking in other folders.
-      ido-use-filename-at-point nil
-      ido-max-prospects 10
+      ido-enable-flex-matching t                 ;; show any name that has the chars you typed
+      ido-case-fold t                            ;; ignore upper or lower case searches
+      ido-auto-merge-work-directories-length -1  ;; after how many characters before looking in other folders.
       ido-default-file-method 'selected-window   ;; use current pane for newly opened file
       ido-default-buffer-method 'selected-window ;; use current pane for newly switched buffer
+      ido-use-filename-at-point nil
+      ido-max-prospects 10
       ;; ido-create-new-buffer 'always
       )
 
 (setq ido-decorations (quote ("\n-> " "" "\n " "\n ..." "[" "]" "
   [No match]" " [Matched]" " [Not readable]" " [Too big]" "
   [Confirm]")))
-;; (defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
-;; (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
-
-;; make ido display vertically.
-;; (progn
-;;   (make-local-variable 'ido-decorations)
-;;   (setf (nth 2 ido-decorations) "\n"))
 
 ;; stop ido from suggesting when naming new file.
 (define-key (cdr ido-minor-mode-map-entry) [remap write-file] nil)
@@ -421,11 +386,24 @@
    )
  )
 
-;; -------------------------------------
-;; Custom functions
-;; -------------------------------------
 
-;; TODO: When duplicating a region add a blank space at the end.
+
+;; Helper Functions:
+
+(defun open-emacs-init-file()
+  "Will locate and open the Emacs init file (.emacs)."
+  (interactive)
+  (find-file user-init-file)
+  )
+(global-set-key (kbd "C-c e") 'open-emacs-init-file)
+
+(defun automatically-eval-init-file()
+  "Automatically load the EMACS init file after change."
+  (when (equal user-init-file buffer-file-name)
+    (load user-init-file))
+  )
+(add-hook 'after-save-hook 'automatically-eval-init-file)
+
 (defun vg-duplicate-line-or-region (&optional n)
   "Duplicate current line, or region if active.
 With argument N, make N copies.
@@ -462,6 +440,7 @@ With negative N, comment out original line and use the absolute value."
    (format "ctags -f TAGS -e -a -R %s" (directory-file-name dir-name)))
   )
 
+;; use compile and recompile instead
 (defun vg-make-target-command (target)
   "Compile make target from within any file, will automaticly look for the root makefile."
   (interactive "sTarget Name: ")
@@ -477,10 +456,6 @@ With negative N, comment out original line and use the absolute value."
     (if (not (window-live-p flycheck-errors-window))
         (call-interactively 'flycheck-list-errors)
       (delete-window flycheck-errors-window))))
-
-;; -------------------------------------
-;; Xah Functions
-;; -------------------------------------
 
 (defun xah-cursor-forward-block (&optional n)
   "Move cursor beginning of next text block.
@@ -523,28 +498,9 @@ Version 2019-02-26"
     (bookmark-jump $this-bookmark)
     ))
 
-;; -------------------------------------
-;; Convince the editing of my emacs config
-;; -------------------------------------
 
-(defun open-emacs-init-file()
-  "Will locate and open the emacs init file. (.emacs)"
-  (interactive)
-  (find-file user-init-file)
-  )
-(global-set-key (kbd "C-c e") 'open-emacs-init-file)
 
-(defun automatically-eval-init-file()
-  "Automatically load the EMACS init file after change."
-  (when (equal user-init-file buffer-file-name)
-    (load user-init-file))
-  )
-(add-hook 'after-save-hook 'automatically-eval-init-file)
-
-;; -------------------------------------
-;; Keymaps
-;; -------------------------------------
-;; Keymaps: https://www.gnu.org/software/emacs/manual/html_node/elisp/Key-Binding-Conventions.html
+;; Keymaps:
 
 ;; remove most retarded key binding of all time.
 (global-unset-key (kbd "C-z"))
@@ -603,52 +559,19 @@ Version 2019-02-26"
 (global-unset-key (kbd "<M-up>"))
 (global-unset-key (kbd "<M-down>"))
 
-;; -------------------------------------
-;; EDITOR OPTIONS
-;; -------------------------------------
+
+
+;; Editor Generated Options:
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
- '(company-quickhelp-color-background "#4F4F4F")
- '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes (quote (monokai)))
- '(custom-safe-themes
-   (quote
-    ("d9646b131c4aa37f01f909fbdd5a9099389518eb68f25277ed19ba99adeb7279" "e6df46d5085fde0ad56a46ef69ebb388193080cc9819e2d6024c9c6e27388ba9" default)))
- '(fci-rule-color "#383838")
- '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(custom-enabled-themes (quote (misterioso)))
  '(package-selected-packages
    (quote
-    (zeal-at-point yasnippets yas-snippets org-tree-slide zenburn-theme yaml-mode web-mode use-package pip-requirements php-mode monokai-theme markdown-mode magit json-mode js2-mode jinja2-mode highlight-indent-guides gitignore-mode flycheck exec-path-from-shell emmet-mode editorconfig dart-mode company)))
- '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
- '(vc-annotate-very-old-color "#DC8CC3"))
+    (lsp-ui lsp-mode company emmet-mode editorconfig yasnippet web-mode magit yaml-mode pip-requirements markdown-mode jinja2-mode gitignore-mode php-mode json-mode dart-mode use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
