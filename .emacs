@@ -156,6 +156,7 @@
 ;; packages.
 (setq package-list '(
 		     use-package
+		     zenburn-theme
                      dart-mode
                      json-mode
                      php-mode
@@ -337,9 +338,9 @@
   (setq gc-cons-threshold 500000000) ;; 500mb
   (setq read-process-output-max (* 10240 10240)) ;; 10mb
   (setq lsp-log-io nil) ;; turn off logs.
+  (setq lsp-file-watch-threshold 5000)
   ;; lsp settings.
   (setq lsp-idle-delay 0.500)
-  (setq lsp-keymap-prefix "C-c l")
   :hook ((php-mode . lsp)
          (js-mode . lsp)
          (javascript-mode . lsp))
@@ -347,6 +348,13 @@
 
 (use-package lsp-ui
   :ensure t
+  :init
+  ;; (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-doc-delay 2)
+  :bind
+  (("C-c l l" . 'lsp-ui-doc-glance))
+  (("C-c l d" . 'lsp-ui-peek-find-definitions))
+  (("C-c l D" . 'lsp-ui-peek-find-references))
   :commands lsp-ui-mode)
 
 
@@ -568,7 +576,12 @@ Version 2019-02-26"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (misterioso)))
+ '(ansi-color-names-vector
+   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(custom-enabled-themes (quote (zenburn)))
+ '(custom-safe-themes
+   (quote
+    ("78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
  '(package-selected-packages
    (quote
     (lsp-ui lsp-mode company emmet-mode editorconfig yasnippet web-mode magit yaml-mode pip-requirements markdown-mode jinja2-mode gitignore-mode php-mode json-mode dart-mode use-package))))
