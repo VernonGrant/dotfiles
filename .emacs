@@ -156,7 +156,6 @@
 ;; packages.
 (setq package-list '(
 		     use-package
-		     zenburn-theme
                      dart-mode
                      json-mode
                      php-mode
@@ -179,6 +178,10 @@
 
 
 ;; Emacs Configuration:
+
+;; performance.
+(setq gc-cons-threshold 100000000) ;; 100mb
+(setq read-process-output-max (* 10240 10240)) ;; 10mb
 
 ;; disable bell.
 (setq visible-bell nil)
@@ -249,6 +252,9 @@
      (add-to-list 'grep-find-ignored-directories ".bundle")))
 (add-hook 'grep-mode-hook (lambda () (toggle-truncate-lines 1)))
 
+;; php mode settings.
+(setq  php-mode-template-compatibility nil)
+
 
 
 ;; Packages:
@@ -256,29 +262,17 @@
 (eval-when-compile
   (require 'use-package))
 
-(use-package flycheck
+(use-package doom-themes
   :ensure t
-  :init
-  (global-flycheck-mode)
-  (setq flycheck-php-phpcs-executable "/home/vernon/.config/composer/vendor/bin/phpcs")
-  (setq flycheck-phpcs-standard "WordPress")
-
-  ;; determine how the flycheck error list should be show.
-  (add-to-list 'display-buffer-alist
-	       `(,(rx bos "*Flycheck errors*" eos)
-		 (display-buffer-reuse-window
-		  display-buffer-in-side-window)
-		 (side            . bottom)
-		 (reusable-frames . visible)
-		 (window-height   . 0.20)))
-
-  ;; add web-mode linters.
-  (with-eval-after-load 'flycheck
-    (flycheck-add-mode 'php-phpcs 'web-mode)
-    (flycheck-add-mode 'html-tidy 'web-mode)
-    (flycheck-add-mode 'css-csslint 'web-mode))
-
-  :bind ("<f5>" . flycheck-list-errors-toggle))
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 (use-package magit
   :ensure t
@@ -290,11 +284,10 @@
   (setq web-mode-block-padding 0)
   (setq web-mode-markup-indent-offset 2)
   :config
-  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode)))
 
 (use-package yasnippet
@@ -322,7 +315,42 @@
 (use-package company
   :ensure t
   :init
+  (setq company-minimum-prefix-length 1
+      company-idle-delay 0.0) ;; default is 0.2
   (global-company-mode))
+
+
+
+;; Flycheck
+
+(use-package flycheck
+  ;; linters:
+  ;; js - sudo npm -g i eslint
+  :ensure t
+  :init
+  (global-flycheck-mode)
+  :config
+  (setq flycheck-php-phpcs-executable "/home/vernon/.config/composer/vendor/bin/phpcs")
+  (setq flycheck-phpcs-standard "WordPress")
+
+  ;; determine how the flycheck error list should be show.
+  ;; (add-to-list 'display-buffer-alist
+  ;; 	       `(,(rx bos "*Flycheck errors*" eos)
+  ;; 		 (display-buffer-reuse-window
+  ;; 		  display-buffer-in-side-window)
+  ;; 		 (side            . bottom)
+  ;; 		 (reusable-frames . visible)
+  ;; 		 (window-height   . 0.20)))
+
+  ;; add web-mode linters.
+  (with-eval-after-load 'flycheck
+    (flycheck-add-mode 'php-phpcs 'web-mode)
+    (flycheck-add-mode 'php-phpcs 'php-mode)
+    (flycheck-add-mode 'css-csslint 'css-mode)
+    (flycheck-add-mode 'html-tidy 'web-mode)
+    (flycheck-add-mode 'css-csslint 'web-mode))
+
+  :bind ("<f5>" . flycheck-list-errors-toggle))
 
 
 
@@ -330,19 +358,29 @@
 
 (use-package lsp-mode
   ;; language servers:
-  ;; - php | sudo npm i intelephense -g
+  ;; - php        | sudo npm i intelephense -g
+  ;; - css        | sudo npm install -g vscode-css-languageserver-bin
+  ;; - json       | lsp-install-server json-ls
+  ;; - html       | lsp-install-server html-ls
+  ;; - javascript | lsp-install-server jsts-ls
+  ;; - markdown   | sudo npm i -g unified-language-server
+  ;; - yaml       | sudo npm install -g yaml-language-server
   :ensure t
   :defer t
-  :init
+  :config
   ;; performance.
-  (setq gc-cons-threshold 500000000) ;; 500mb
-  (setq read-process-output-max (* 10240 10240)) ;; 10mb
   (setq lsp-log-io nil) ;; turn off logs.
   (setq lsp-file-watch-threshold 5000)
-  ;; lsp settings.
+  (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-idle-delay 0.500)
+  (setq lsp-diagnostic-package :none) ;; use just plain flycheck instead. TODO: how to also include lsp errors.
   :hook ((php-mode . lsp)
          (js-mode . lsp)
+         (css-mode . lsp)
+	 (html-mode . lsp)
+	 (web-mode . lsp)
+         (json-mode . lsp)
+         (yaml-mode . lsp)
          (javascript-mode . lsp))
   :commands lsp)
 
@@ -350,7 +388,7 @@
   :ensure t
   :init
   ;; (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-doc-delay 2)
+  (setq lsp-ui-doc-delay 1)
   :bind
   (("C-c l l" . 'lsp-ui-doc-glance))
   (("C-c l d" . 'lsp-ui-peek-find-definitions))
@@ -364,6 +402,8 @@
 (ido-mode t)
 (ido-everywhere)
 
+;; keep the minibuffer at x height.
+
 ;; set the min height.
 (setq ido-enable-prefix nil
       ido-enable-flex-matching t                 ;; show any name that has the chars you typed
@@ -373,12 +413,12 @@
       ido-default-buffer-method 'selected-window ;; use current pane for newly switched buffer
       ido-use-filename-at-point nil
       ido-max-prospects 10
-      ;; ido-create-new-buffer 'always
-      )
+      ido-max-window-height 3
+      ido-create-new-buffer 'always)
 
-(setq ido-decorations (quote ("\n-> " "" "\n " "\n ..." "[" "]" "
-  [No match]" " [Matched]" " [Not readable]" " [Too big]" "
-  [Confirm]")))
+;; (setq ido-decorations (quote ("\n-> " "" "\n " "\n ..." "[" "]" "
+;;   [No match]" " [Matched]" " [Not readable]" " [Too big]" "
+;;   [Confirm]")))
 
 ;; stop ido from suggesting when naming new file.
 (define-key (cdr ido-minor-mode-map-entry) [remap write-file] nil)
@@ -519,6 +559,9 @@ Version 2019-02-26"
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
 
+;; buffers remap
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 ;; quick open recent files.
 (global-set-key (kbd "C-c r") 'recentf-open-files)
 
@@ -576,15 +619,50 @@ Version 2019-02-26"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(custom-enabled-themes (quote (zenburn)))
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-enabled-themes (quote (doom-spacegrey)))
  '(custom-safe-themes
    (quote
-    ("78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
+    ("93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "151bde695af0b0e69c3846500f58d9a0ca8cb2d447da68d7fbf4154dcf818ebc" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "b54826e5d9978d59f9e0a169bbd4739dd927eead3ef65f56786621b53c031a7c" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "3a3de615f80a0e8706208f0a71bbcc7cc3816988f971b6d237223b6731f91605" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "d2e9c7e31e574bf38f4b0fb927aaff20c1e5f92f72001102758005e53d77b8c9" "2422e84e81ce5ff243b9b8dd4076b8bab9b5c630c9b8a7533ec3c5b3fed23329" "c5692610c00c749e3cbcea09d61f3ed5dac7a01e0a340f0ec07f35061a716436" "78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
+ '(fci-rule-color "#383838")
+ '(hl-sexp-background-color "#efebe9")
+ '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
+ '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
+ '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (lsp-ui lsp-mode company emmet-mode editorconfig yasnippet web-mode magit yaml-mode pip-requirements markdown-mode jinja2-mode gitignore-mode php-mode json-mode dart-mode use-package))))
+    (lsp-ui lsp-mode company emmet-mode editorconfig yasnippet web-mode magit yaml-mode pip-requirements markdown-mode jinja2-mode gitignore-mode php-mode json-mode dart-mode use-package)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

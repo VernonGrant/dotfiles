@@ -157,7 +157,7 @@ LOCAL_PROJECTS_PATH='/home/vernon/Devenv/projects'
 # 'add-source-completions wordpress woocommerce' will add all the
 # source code for that fromwork inside the current project. This is
 # then used by Emacs's lsp-mode.
-function add-source-completions() {
+function source-completions-add() {
     for var in "$@"
     do
 	mkdir -p ./.source-completions/$var
