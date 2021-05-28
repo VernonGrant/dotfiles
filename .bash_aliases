@@ -122,6 +122,10 @@ alias source-completions-list='ls -la ~/Devenv/source-completions/'
 #                          HELPER FUNCTIONS                           #
 #######################################################################
 
+# Cutting MP3 files example.
+# sudo aptitude install poc-streamer
+# mp3cut -o output.mp3 -t 00:00:00+000-00:02:05+000 source.mp3
+
 # Convert the pages of a PDF file to images.
 function pdf-to-jpg() {
     pdftoppm -jpeg -rx 200 -ry 200 $1 page
@@ -142,6 +146,7 @@ function pdf-mark-paid() {
 	-dBATCH \
 	$filename-paid-decrypt.pdf
 }
+
 
 #######################################################################
 #                          GLOBAL VARIABLES                           #

@@ -48,6 +48,7 @@
 ;; C-x h, C-M \    | reindent entire buffer
 ;; C-S-&           | run async command
 ;; C-x C-j         | open dired jump
+;; C-x SPC         | rectangle edit mode, can use string-insert-rectangle.
 ;; C-x +           | resize all splits to equal sizes
 ;; C-x 5 2         | open in new frame
 ;; C-x r SPC       | point-to-register
@@ -145,35 +146,15 @@
 ;; - Ispell   | helps mark misspelled words
 ;; - basictex | For org not exportasion to PDF
 
-
-
 ;; Melpa:
 
 (require 'package)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
-;; packages.
-(setq package-list '(
-		     use-package
-                     dart-mode
-                     json-mode
-                     php-mode
-                     gitignore-mode
-                     jinja2-mode
-                     markdown-mode
-                     pip-requirements
-                     yaml-mode
-                     ))
-
 ;; fetch the list of packages available.
 (unless package-archive-contents
   (package-refresh-contents))
-
-;; install the missing packages.
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
 
 
 
@@ -207,6 +188,9 @@
 
 ;; show line numbers.
 (global-display-line-numbers-mode)
+
+;; show ruler
+;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
 ;; IMPORTANT, helps increase the nextline performace by 10x.
 (setq auto-window-vscroll nil)
@@ -249,151 +233,12 @@
   '(progn
      (add-to-list 'grep-find-ignored-directories "node_modules")
      (add-to-list 'grep-find-ignored-directories "vendor")
+     (add-to-list 'grep-find-ignored-directories ".source-completions")
      (add-to-list 'grep-find-ignored-directories ".bundle")))
 (add-hook 'grep-mode-hook (lambda () (toggle-truncate-lines 1)))
 
 ;; php mode settings.
 (setq  php-mode-template-compatibility nil)
-
-
-
-;; Packages:
-
-(eval-when-compile
-  (require 'use-package))
-
-(use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
-
-(use-package magit
-  :ensure t
-  :bind ("C-c g" . magit-status))
-
-(use-package web-mode
-  :ensure t
-  :init
-  (setq web-mode-block-padding 0)
-  (setq web-mode-markup-indent-offset 2)
-  :config
-  ;; (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-  ;; (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode)))
-
-(use-package yasnippet
-  :ensure t
-  :init
-  (setq yas-snippet-dirs
-	'("~/.emacs-snippets"))
-  (yas-global-mode 1))
-
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode +1))
-
-;; this solved the conflict with php, web-mode.
-(add-hook 'editorconfig-custom-hooks
-	  (lambda (hash) (setq web-mode-block-padding 0)))
-
-(use-package emmet-mode
-  :ensure t
-  :hook
-  (html-mode . emmet-mode)
-  (web-mode . emmet-mode))
-
-(use-package company
-  :ensure t
-  :init
-  (setq company-minimum-prefix-length 1
-      company-idle-delay 0.0) ;; default is 0.2
-  (global-company-mode))
-
-
-
-;; Flycheck
-
-(use-package flycheck
-  ;; linters:
-  ;; js - sudo npm -g i eslint
-  :ensure t
-  :init
-  (global-flycheck-mode)
-  :config
-  (setq flycheck-php-phpcs-executable "/home/vernon/.config/composer/vendor/bin/phpcs")
-  (setq flycheck-phpcs-standard "WordPress")
-
-  ;; determine how the flycheck error list should be show.
-  ;; (add-to-list 'display-buffer-alist
-  ;; 	       `(,(rx bos "*Flycheck errors*" eos)
-  ;; 		 (display-buffer-reuse-window
-  ;; 		  display-buffer-in-side-window)
-  ;; 		 (side            . bottom)
-  ;; 		 (reusable-frames . visible)
-  ;; 		 (window-height   . 0.20)))
-
-  ;; add web-mode linters.
-  (with-eval-after-load 'flycheck
-    (flycheck-add-mode 'php-phpcs 'web-mode)
-    (flycheck-add-mode 'php-phpcs 'php-mode)
-    (flycheck-add-mode 'css-csslint 'css-mode)
-    (flycheck-add-mode 'html-tidy 'web-mode)
-    (flycheck-add-mode 'css-csslint 'web-mode))
-
-  :bind ("<f5>" . flycheck-list-errors-toggle))
-
-
-
-;; LSP Mode:
-
-(use-package lsp-mode
-  ;; language servers:
-  ;; - php        | sudo npm i intelephense -g
-  ;; - css        | sudo npm install -g vscode-css-languageserver-bin
-  ;; - json       | lsp-install-server json-ls
-  ;; - html       | lsp-install-server html-ls
-  ;; - javascript | lsp-install-server jsts-ls
-  ;; - markdown   | sudo npm i -g unified-language-server
-  ;; - yaml       | sudo npm install -g yaml-language-server
-  :ensure t
-  :defer t
-  :config
-  ;; performance.
-  (setq lsp-log-io nil) ;; turn off logs.
-  (setq lsp-file-watch-threshold 5000)
-  (setq lsp-headerline-breadcrumb-enable nil)
-  (setq lsp-idle-delay 0.500)
-  (setq lsp-diagnostic-package :none) ;; use just plain flycheck instead. TODO: how to also include lsp errors.
-  :hook ((php-mode . lsp)
-         (js-mode . lsp)
-         (css-mode . lsp)
-	 (html-mode . lsp)
-	 (web-mode . lsp)
-         (json-mode . lsp)
-         (yaml-mode . lsp)
-         (javascript-mode . lsp))
-  :commands lsp)
-
-(use-package lsp-ui
-  :ensure t
-  :init
-  ;; (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-doc-delay 1)
-  :bind
-  (("C-c l l" . 'lsp-ui-doc-glance))
-  (("C-c l d" . 'lsp-ui-peek-find-definitions))
-  (("C-c l D" . 'lsp-ui-peek-find-references))
-  :commands lsp-ui-mode)
 
 
 
@@ -436,6 +281,144 @@
 
 
 
+;; Packages:
+
+(eval-when-compile
+  (require 'use-package))
+
+;; core pacakges.
+(use-package dart-mode :ensure t)
+(use-package json-mode :ensure t)
+(use-package yaml-mode :ensure t)
+(use-package php-mode :ensure t)
+(use-package gitignore-mode :ensure t)
+(use-package jinja2-mode :ensure t)
+(use-package markdown-mode :ensure t)
+(use-package pip-requirements :ensure t)
+(use-package emmet-mode
+  :ensure t
+  :hook
+  (html-mode . emmet-mode)
+  (web-mode . emmet-mode))
+(use-package web-mode
+  :ensure t
+  :init
+  (setq web-mode-block-padding 0)
+  (setq web-mode-markup-indent-offset 2)
+  :config
+  ;; (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode)))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode +1))
+
+;; this solved the conflict with php, web-mode.
+(add-hook 'editorconfig-custom-hooks
+	  (lambda (hash) (setq web-mode-block-padding 0)))
+
+(use-package magit
+  :ensure t
+  :bind ("C-c g" . magit-status))
+
+(use-package yasnippet
+  :ensure t
+  :init
+  (setq yas-snippet-dirs
+	'("~/.emacs-snippets"))
+  (yas-global-mode 1))
+
+(use-package company
+  :ensure t
+  :init
+  (setq company-minimum-prefix-length 1
+      company-idle-delay 0.0) ;; default is 0.2
+  (global-company-mode))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults).
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
+  ;; Enable flashing mode-line on errors.
+  (doom-themes-visual-bell-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+
+
+;; Flycheck
+
+(use-package flycheck
+  ;; linters:
+  ;; js - sudo npm -g i eslint
+  :ensure t
+  :init
+  (global-flycheck-mode)
+  :config
+  (setq flycheck-php-phpcs-executable "/home/vernon/.config/composer/vendor/bin/phpcs")
+  (setq flycheck-phpcs-standard "WordPress")
+
+  ;; add web-mode linters.
+  (with-eval-after-load 'flycheck
+    (flycheck-add-mode 'php-phpcs 'web-mode)
+    (flycheck-add-mode 'php-phpcs 'php-mode)
+    (flycheck-add-mode 'css-csslint 'css-mode)
+    (flycheck-add-mode 'html-tidy 'web-mode)
+    (flycheck-add-mode 'css-csslint 'web-mode))
+  :bind ("<f5>" . flycheck-list-errors-toggle))
+
+
+
+;; LSP Mode:
+;; language servers:
+;; - php        | sudo npm i intelephense -g
+;; - css        | sudo npm install -g vscode-css-languageserver-bin
+;; - json       | lsp-install-server json-ls
+;; - html       | lsp-install-server html-ls
+;; - javascript | lsp-install-server jsts-ls
+;; - markdown   | sudo npm i -g unified-language-server
+;; - yaml       | sudo npm install -g yaml-language-server
+
+(use-package lsp-mode
+  :ensure t
+  :defer t
+  :config
+  ;; performance.
+  (setq lsp-log-io nil) ;; turn off logs.
+  (setq lsp-file-watch-threshold 5000)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-diagnostic-package :none) ;; use just plain flycheck instead. TODO: how to also include lsp errors.
+  :hook ((php-mode . lsp)
+         (js-mode . lsp)
+         (css-mode . lsp)
+	 (html-mode . lsp)
+	 (web-mode . lsp)
+         (json-mode . lsp)
+         (yaml-mode . lsp)
+         (javascript-mode . lsp))
+  :commands lsp)
+
+(use-package lsp-ui
+  :ensure t
+  :init
+  ;; (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-doc-delay 1)
+  :bind
+  (("C-c l l" . 'lsp-ui-doc-glance))
+  (("C-c l d" . 'lsp-ui-peek-find-definitions))
+  (("C-c l D" . 'lsp-ui-peek-find-references))
+  :commands lsp-ui-mode)
+
+
+
 ;; Helper Functions:
 
 (defun open-emacs-init-file()
@@ -474,29 +457,6 @@ With negative N, comment out original line and use the absolute value."
         (forward-line 1)
         (forward-char pos)))))
 
-(defun vg-ctags-create-tags (dir-name)
-  "Create tags file."
-  (interactive "DDirectory: ")
-  (shell-command
-   (format "ctags -f TAGS -e -R %s" (directory-file-name dir-name)))
-  )
-
-(defun vg-ctags-add-tags (dir-name)
-  "Add tags to file."
-  (interactive "DDirectory: ")
-  (shell-command
-   (format "ctags -f TAGS -e -a -R %s" (directory-file-name dir-name)))
-  )
-
-;; use compile and recompile instead
-(defun vg-make-target-command (target)
-  "Compile make target from within any file, will automaticly look for the root makefile."
-  (interactive "sTarget Name: ")
-  (let* ((makefileDir (locate-dominating-file buffer-file-name "makefile"))
-        (makefileCommand (format "make %s --directory=%s" target makefileDir)))
-    (compile makefileCommand))
-  )
-
 (defun flycheck-list-errors-toggle ()
   "Toggle the error list for the current buffer."
   (interactive)
@@ -533,9 +493,10 @@ Version 2016-06-15"
   (back-to-indentation))
 
 (defun xah-bookmark-open-file-fast ()
-  "Prompt to open a file from bookmark `bookmark-bmenu-list'.
-This command is similar to `bookmark-jump', but uses the `ido-mode' interface, and ignore cursor position in bookmark.
-URL `http://ergoemacs.org/emacs/emacs_hotkey_open_file_fast.html'
+  "Prompt to open a file from bookmark `bookmark-bmenu-list'.  This
+command is similar to `bookmark-jump', but uses the `ido-mode'
+interface, and ignore cursor position in bookmark.  URL
+`http://ergoemacs.org/emacs/emacs_hotkey_open_file_fast.html'
 Version 2019-02-26"
   (interactive)
   (require 'bookmark)
@@ -550,6 +511,10 @@ Version 2019-02-26"
 
 ;; Keymaps:
 
+;; dired jump, require is needed to load it from the start.
+(require 'dired-x)
+(global-set-key (kbd "C-x j") #'dired-jump)
+
 ;; remove most retarded key binding of all time.
 (global-unset-key (kbd "C-z"))
 
@@ -558,9 +523,6 @@ Version 2019-02-26"
 (global-set-key (kbd "M-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "M-<down>") 'shrink-window)
 (global-set-key (kbd "M-<up>") 'enlarge-window)
-
-;; buffers remap
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; quick open recent files.
 (global-set-key (kbd "C-c r") 'recentf-open-files)
@@ -572,10 +534,6 @@ Version 2019-02-26"
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C-_") 'text-scale-decrease)
 
-;; ctags
-(global-set-key (kbd "<f7>") 'vg-ctags-create-tags)
-(global-set-key (kbd "<f8>") 'vg-ctags-add-tags)
-
 ;; editing.
 (global-set-key (kbd "M-s M-s") 'sort-lines)
 
@@ -586,29 +544,10 @@ Version 2019-02-26"
 ;; custom function bindings.
 (global-set-key (kbd "C-x r b") 'xah-bookmark-open-file-fast)
 (global-set-key (kbd "C-c d") 'vg-duplicate-line-or-region)
-(global-set-key (kbd "C-c m") 'vg-make-target-command)
 
 ;; vertical movement.
 (global-set-key (kbd "M-p") 'xah-cursor-backward-block)
 (global-set-key (kbd "M-n") 'xah-cursor-forward-block)
-
-;; dired jump, require is needed to load it from the start.
-(require 'dired-x)
-(global-set-key (kbd "C-x j") #'dired-jump)
-
-;; disable arrow keys completely.
-(global-unset-key (kbd "<left>"))
-(global-unset-key (kbd "<right>"))
-(global-unset-key (kbd "<up>"))
-(global-unset-key (kbd "<down>"))
-(global-unset-key (kbd "<C-left>"))
-(global-unset-key (kbd "<C-right>"))
-(global-unset-key (kbd "<C-up>"))
-(global-unset-key (kbd "<C-down>"))
-(global-unset-key (kbd "<M-left>"))
-(global-unset-key (kbd "<M-right>"))
-(global-unset-key (kbd "<M-up>"))
-(global-unset-key (kbd "<M-down>"))
 
 
 
@@ -628,7 +567,7 @@ Version 2019-02-26"
  '(custom-enabled-themes (quote (doom-spacegrey)))
  '(custom-safe-themes
    (quote
-    ("93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "151bde695af0b0e69c3846500f58d9a0ca8cb2d447da68d7fbf4154dcf818ebc" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "b54826e5d9978d59f9e0a169bbd4739dd927eead3ef65f56786621b53c031a7c" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "3a3de615f80a0e8706208f0a71bbcc7cc3816988f971b6d237223b6731f91605" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "d2e9c7e31e574bf38f4b0fb927aaff20c1e5f92f72001102758005e53d77b8c9" "2422e84e81ce5ff243b9b8dd4076b8bab9b5c630c9b8a7533ec3c5b3fed23329" "c5692610c00c749e3cbcea09d61f3ed5dac7a01e0a340f0ec07f35061a716436" "78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
+    ("a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "fe666e5ac37c2dfcf80074e88b9252c71a22b6f5d2f566df9a7aa4f9bea55ef8" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "ecba61c2239fbef776a72b65295b88e5534e458dfe3e6d7d9f9cb353448a569e" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "151bde695af0b0e69c3846500f58d9a0ca8cb2d447da68d7fbf4154dcf818ebc" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "b54826e5d9978d59f9e0a169bbd4739dd927eead3ef65f56786621b53c031a7c" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "3a3de615f80a0e8706208f0a71bbcc7cc3816988f971b6d237223b6731f91605" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "d2e9c7e31e574bf38f4b0fb927aaff20c1e5f92f72001102758005e53d77b8c9" "2422e84e81ce5ff243b9b8dd4076b8bab9b5c630c9b8a7533ec3c5b3fed23329" "c5692610c00c749e3cbcea09d61f3ed5dac7a01e0a340f0ec07f35061a716436" "78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
  '(fci-rule-color "#383838")
  '(hl-sexp-background-color "#efebe9")
  '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
