@@ -5,7 +5,7 @@
 # shorten bash path
 PROMPT_DIRTRIM=1
 
-alias reload='. ~/.bashrc'
+alias reload='. ~/.zshrc'
 alias c='clear'
 
 # Linux helpers
@@ -202,10 +202,10 @@ function uploadDatabaseToDockerContainer() {
     local loc_mysql_database="exampledb"
 
     # avoid asking for sudo password.
-    echo 'secret' | sudo -S ls ./
+    ls ./
 
     # upload database to local running container.
-    cat $2 | sudo docker exec -i $1 /usr/bin/mysql --user="$loc_mysql_user" --password="$loc_mysql_password" $loc_mysql_database
+    cat $2 | docker exec -i $1 /usr/bin/mysql --user="$loc_mysql_user" --password="$loc_mysql_password" $loc_mysql_database
 }
 
 # Changes the URL of a running WordPress container.
@@ -214,15 +214,15 @@ function uploadDatabaseToDockerContainer() {
 # $3, the replacement url.
 function changeDockerContainerWordPressURL() {
     # avoid asking for sudo password.
-    echo 'secret' | sudo -S ls ./
+    ls ./
 
     # install wordpress cli.
-    sudo docker exec -i $1 sh -c "cd /var/www/html && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
-    sudo docker exec -i $1 sh -c "cd /var/www/html && chmod +x wp-cli.phar"
-    sudo docker exec -i $1 sh -c "cd /var/www/html && mv wp-cli.phar /usr/local/bin/wp"
+    docker exec -i $1 sh -c "cd /var/www/html && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+    docker exec -i $1 sh -c "cd /var/www/html && chmod +x wp-cli.phar"
+    docker exec -i $1 sh -c "cd /var/www/html && mv wp-cli.phar /usr/local/bin/wp"
 
     # replace wordpress url.
-    sudo docker exec -i $1 sh -c "cd /var/www/html && wp search-replace --all-tables '$2' '$3' --allow-root"
+    docker exec -i $1 sh -c "cd /var/www/html && wp search-replace --all-tables '$2' '$3' --allow-root"
 }
 
 # Pulls a mysql database from my remote development server.
