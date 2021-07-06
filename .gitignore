@@ -11,12 +11,6 @@
 # tmux
 !.tmux.conf
 
-# hyper
-!.hyper.js
-
-# conky
-!.conkyrc
-
 # vim
 !.vimrc
 

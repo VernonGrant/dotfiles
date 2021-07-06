@@ -149,6 +149,7 @@
 ;; Melpa:
 
 (require 'package)
+;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
@@ -259,7 +260,8 @@
       ido-use-filename-at-point nil
       ido-max-prospects 10
       ido-max-window-height 3
-      ido-create-new-buffer 'always)
+      ido-create-new-buffer 'always
+      )
 
 ;; (setq ido-decorations (quote ("\n-> " "" "\n " "\n ..." "[" "]" "
 ;;   [No match]" " [Matched]" " [Not readable]" " [Too big]" "
@@ -287,6 +289,8 @@
   (require 'use-package))
 
 ;; core pacakges.
+;; (use-package glsl-mode)
+(use-package cmake-mode :ensure t)
 (use-package dart-mode :ensure t)
 (use-package json-mode :ensure t)
 (use-package yaml-mode :ensure t)
@@ -339,17 +343,17 @@
       company-idle-delay 0.0) ;; default is 0.2
   (global-company-mode))
 
-(use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults).
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
-  ;; Enable flashing mode-line on errors.
-  (doom-themes-visual-bell-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+;; (use-package doom-themes
+;;   :ensure t
+;;   :config
+;;   ;; Global settings (defaults).
+;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+;;   (load-theme 'doom-one t)
+;;   ;; Enable flashing mode-line on errors.
+;;   (doom-themes-visual-bell-config)
+;;   ;; Corrects (and improves) org-mode's native fontification.
+;;   (doom-themes-org-config))
 
 
 
@@ -378,6 +382,8 @@
 
 ;; LSP Mode:
 ;; language servers:
+;; - c          | sudo apt-get install clangd-9
+;;  -c          | sudo apt install clangd
 ;; - php        | sudo npm i intelephense -g
 ;; - css        | sudo npm install -g vscode-css-languageserver-bin
 ;; - json       | lsp-install-server json-ls
@@ -396,9 +402,19 @@
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-idle-delay 0.500)
   (setq lsp-diagnostic-package :none) ;; use just plain flycheck instead. TODO: how to also include lsp errors.
+  ;; code
+  (setq lsp-clients-clangd-args
+	'("-j=2"
+	  "--background-index"
+	  "--clang-tidy"
+	  "--completion-style=bundled"
+	  "--pch-storage=memory"
+	  "--header-insertion=never"
+	  "--header-insertion-decorators=0"))
   :hook ((php-mode . lsp)
          (js-mode . lsp)
          (css-mode . lsp)
+         (c-mode . lsp)
 	 (html-mode . lsp)
 	 (web-mode . lsp)
          (json-mode . lsp)
@@ -550,58 +566,16 @@ Version 2019-02-26"
 (global-set-key (kbd "M-n") 'xah-cursor-forward-block)
 
 
-
 ;; Editor Generated Options:
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(company-quickhelp-color-background "#4F4F4F")
- '(company-quickhelp-color-foreground "#DCDCCC")
- '(custom-enabled-themes (quote (doom-spacegrey)))
- '(custom-safe-themes
-   (quote
-    ("a3fa4abaf08cc169b61dea8f6df1bbe4123ec1d2afeb01c17e11fdc31fc66379" "fe666e5ac37c2dfcf80074e88b9252c71a22b6f5d2f566df9a7aa4f9bea55ef8" "cd736a63aa586be066d5a1f0e51179239fe70e16a9f18991f6f5d99732cabb32" "ecba61c2239fbef776a72b65295b88e5534e458dfe3e6d7d9f9cb353448a569e" "93a0885d5f46d2aeac12bf6be1754faa7d5e28b27926b8aa812840fe7d0b7983" "151bde695af0b0e69c3846500f58d9a0ca8cb2d447da68d7fbf4154dcf818ebc" "d1b4990bd599f5e2186c3f75769a2c5334063e9e541e37514942c27975700370" "6b2636879127bf6124ce541b1b2824800afc49c6ccd65439d6eb987dbf200c36" "b54826e5d9978d59f9e0a169bbd4739dd927eead3ef65f56786621b53c031a7c" "4697a2d4afca3f5ed4fdf5f715e36a6cac5c6154e105f3596b44a4874ae52c45" "b35a14c7d94c1f411890d45edfb9dc1bd61c5becd5c326790b51df6ebf60f402" "3a3de615f80a0e8706208f0a71bbcc7cc3816988f971b6d237223b6731f91605" "f0dc4ddca147f3c7b1c7397141b888562a48d9888f1595d69572db73be99a024" "d2e9c7e31e574bf38f4b0fb927aaff20c1e5f92f72001102758005e53d77b8c9" "2422e84e81ce5ff243b9b8dd4076b8bab9b5c630c9b8a7533ec3c5b3fed23329" "c5692610c00c749e3cbcea09d61f3ed5dac7a01e0a340f0ec07f35061a716436" "78e9a3e1c519656654044aeb25acb8bec02579508c145b6db158d2cfad87c44e" default)))
- '(fci-rule-color "#383838")
- '(hl-sexp-background-color "#efebe9")
- '(jdee-db-active-breakpoint-face-colors (cons "#1B2229" "#51afef"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#1B2229" "#98be65"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#1B2229" "#3f444a"))
- '(nrepl-message-colors
-   (quote
-    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(custom-enabled-themes (quote (leuven)))
  '(package-selected-packages
    (quote
-    (lsp-ui lsp-mode company emmet-mode editorconfig yasnippet web-mode magit yaml-mode pip-requirements markdown-mode jinja2-mode gitignore-mode php-mode json-mode dart-mode use-package)))
- '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
- '(vc-annotate-background "#2B2B2B")
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#BC8383")
-     (40 . "#CC9393")
-     (60 . "#DFAF8F")
-     (80 . "#D0BF8F")
-     (100 . "#E0CF9F")
-     (120 . "#F0DFAF")
-     (140 . "#5F7F5F")
-     (160 . "#7F9F7F")
-     (180 . "#8FB28F")
-     (200 . "#9FC59F")
-     (220 . "#AFD8AF")
-     (240 . "#BFEBBF")
-     (260 . "#93E0E3")
-     (280 . "#6CA0A3")
-     (300 . "#7CB8BB")
-     (320 . "#8CD0D3")
-     (340 . "#94BFF3")
-     (360 . "#DC8CC3"))))
- '(vc-annotate-very-old-color "#DC8CC3"))
+    (cmake-mode yasnippet yaml-mode web-mode use-package pip-requirements php-mode magit lsp-ui json-mode jinja2-mode gitignore-mode emmet-mode editorconfig doom-themes dart-mode company))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

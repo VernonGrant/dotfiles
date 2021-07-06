@@ -89,10 +89,9 @@ find . -name "*.pyc" -type f -prune
 '
 
 # Backup my local machine to external drives.
-alias back-me-up='. ~/.scripts/backup-local.sh'
+alias back-me-up='rsync -av --delete --exclude="node_modules" --exclude=".cache" ~/ /media/vernon/Storage/Backups/'
 
 # Tmux
-
 # Attaches tmux to a session (example: ta portal)
 alias ta='tmux attach'
 
